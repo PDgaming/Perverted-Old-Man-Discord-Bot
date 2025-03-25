@@ -35,9 +35,9 @@ async def send_message(message: Message, user_message: str) -> None:
 async def on_ready() -> None:
     print(f"{client.user} is now running!")
 
-    channel = client.get_channel(1112325774037495841)
+    channel = client.get_channel(1353714545230741538)
 
-    await channel.send("Hello guys!")
+    # await channel.send("Hello guys!")
 
 @client.event
 async def on_message(message: Message) -> None:

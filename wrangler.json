@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "perverted-old-man-discord-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-06",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    
+  }
+}
