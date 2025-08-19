@@ -2,9 +2,10 @@ from typing import Final, Optional
 import os
 import logging
 from dotenv import load_dotenv
-from discord import Intents, Client, Message, TextChannel
-from responses import get_response
+from discord import Intents, Client, Message, TextChannel, app_commands
 import discord
+from discord.ext import commands
+from responses import get_response
 import sys
 
 logging.basicConfig(level=logging.INFO,
@@ -17,19 +18,15 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
-CHANNEL_ID: Final[int] = 1353714545230741538
+CHANNEL_ID: Final[int] = 1353953044127154217
 
 intents: Intents = Intents.default()
 intents.message_content = True
-client: Client = Client(intents=intents)
+client: commands.Bot = commands.Bot(command_prefix="/", intents=intents)
 
 if not TOKEN:
     logger.error("Discord token not found in environment variables")
     sys.exit(1)
-
-intents: Intents = Intents.default()
-intents.message_content = True
-client: Client = Client(intents=intents)
 
 async def send_message(message: Message, user_message: str, username: str) -> None:
     if not user_message:
@@ -55,10 +52,43 @@ async def send_message(message: Message, user_message: str, username: str) -> No
         await message.channel.send("An error occurred while processing your message.")
 
 
+@client.tree.command(name="grandpa", description="Chat with Professor William")
+async def grandpa(interaction: discord.Interaction, message: str):
+    """
+    Slash command to chat with William from any channel
+    
+    Args:
+        interaction: The interaction object
+        message: The message to send to William
+    """
+    try:
+        username: str = str(interaction.user)
+        response: str = get_response(message, username)
+        
+        # Defer the response if it might take longer than 3 seconds
+        await interaction.response.defer(ephemeral=False)
+        
+        # Send both the user's message and William's response
+        await interaction.followup.send(f"**{username}:** {message}\n\n**William:** {response}")
+        logger.info(f"Slash command response sent to {username} in {interaction.channel}")
+        
+    except Exception as e:
+        logger.error(f"Error in grandpa command: {e}")
+        await interaction.followup.send("Oh my, I seem to have dropped my glasses! Could you try again, dearie?")
+
+
 @client.event
 async def on_ready() -> None:
     logger.info(f"Bot {client.user} is now running!")
+    
+    # Sync slash commands
+    try:
+        synced = await client.tree.sync()
+        logger.info(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        logger.error(f"Failed to sync commands: {e}")
 
+    # Send startup message in the main channel
     channel: Optional[TextChannel] = client.get_channel(CHANNEL_ID)
     if channel:
         try:
