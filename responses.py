@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
-TOKEN: Final[str] = "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"
+TOKEN: Final[str] = os.getenv("GROQ_API_KEY")
 
 if not TOKEN:
     logger.error("Groq API key not found in environment variables")
