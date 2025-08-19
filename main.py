@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO,
 )
 logger = logging.getLogger(__name__)
 load_dotenv()
-TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
+TOKEN: Final[str] = os.getenv("MTM1MzkzNjUxNjE5NTU0OTI2NA.Giogtz.Vz6LSXulwyuTVo7y1CBJg00rYaUacraA3SaKEo")
 CHANNEL_ID: Final[int] = 1353953044127154217
 
 intents: Intents = Intents.default()
