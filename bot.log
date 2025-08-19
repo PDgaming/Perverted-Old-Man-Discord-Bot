@@ -482,3 +482,431 @@ aiohttp.client_exceptions.ClientConnectionResetError: Cannot write to closing tr
 2025-08-19 21:05:45,984 - INFO - [perverted-old-man] roronoa_zoro_prodeh: hello! 👋
 2025-08-19 21:05:48,230 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2025-08-19 21:05:49,144 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:27:45,518 - INFO - logging in using static token
+2025-08-19 21:27:48,026 - INFO - Shard ID None has connected to Gateway (Session ID: 938ba88f51a7be60602e4db7bda342f3).
+2025-08-19 21:27:50,259 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-08-19 21:27:50,785 - INFO - Synced 1 command(s)
+2025-08-19 21:27:51,483 - INFO - Sent startup message in channel 1353953044127154217
+2025-08-19 21:28:02,256 - INFO - [perverted-old-man] roronoa_zoro_prodeh: hi 👋
+2025-08-19 21:28:05,810 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:28:06,378 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:28:34,960 - INFO - [perverted-old-man] roronoa_zoro_prodeh: where did you find swords in my name?
+2025-08-19 21:28:36,939 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:28:37,677 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:29:21,997 - INFO - [perverted-old-man] roronoa_zoro_prodeh: wow. you can see my pfp? that's cool! i didn't know you had access to that kind of data.. i thought you could only see my name lol..
+but that's cool!
+2025-08-19 21:29:24,282 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:29:25,161 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:30:36,566 - INFO - [perverted-old-man] roronoa_zoro_prodeh: nah i love one piece, and zoro is a nice character. so when creating this account, i just chose his picture. although i think i like jinbei more now lol
+*still in the punk hazard ark...
+2025-08-19 21:30:38,919 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:30:39,872 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:32:09,440 - INFO - [perverted-old-man] roronoa_zoro_prodeh: haha no way!! you know about one piece???? damn!!!
+i mean it is a very long running show ig..
+and i didn't shift loyalty bro, i like all the straw hats! but i just like jinbei more ig.. i mean come on, oda-san has written these chracters quite well, i like whitebeard also!
+2025-08-19 21:32:11,767 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:32:12,776 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:34:30,017 - INFO - [perverted-old-man] roronoa_zoro_prodeh: <@921990520643936256>!!!!!!!!!!!! learn something from this man, you need to watch one piece.
+
+Anyway, don't give me any spoilers bro. what about you? do you have any particular anime you like? or do you maybe not watch anime?
+2025-08-19 21:34:32,325 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:34:33,131 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:34:52,748 - INFO - [perverted-old-man] roronoa_zoro_prodeh: Anyway, don't give me any spoilers bro. what about you? do you have any particular anime you like? or do you maybe not watch anime?
+2025-08-19 21:34:55,298 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:34:56,055 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:38:33,206 - ERROR - Attempting a reconnect in 1.25s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:38:34,481 - ERROR - Attempting a reconnect in 3.32s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:38:37,823 - ERROR - Attempting a reconnect in 6.03s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:38:43,885 - ERROR - Attempting a reconnect in 13.69s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:38:55,708 - INFO - logging in using static token
+2025-08-19 21:38:55,716 - ERROR - Unexpected error: Cannot connect to host discord.com:443 ssl:default [Name or service not known]
+2025-08-19 21:39:31,619 - INFO - logging in using static token
+2025-08-19 21:39:31,626 - ERROR - Unexpected error: Cannot connect to host discord.com:443 ssl:default [Name or service not known]
+2025-08-19 21:39:32,939 - INFO - logging in using static token
+2025-08-19 21:39:32,946 - ERROR - Unexpected error: Cannot connect to host discord.com:443 ssl:default [Name or service not known]
+2025-08-19 21:40:23,533 - INFO - logging in using static token
+2025-08-19 21:40:23,538 - ERROR - Unexpected error: Cannot connect to host discord.com:443 ssl:default [Name or service not known]
+2025-08-19 21:40:38,422 - INFO - logging in using static token
+2025-08-19 21:40:42,499 - INFO - Shard ID None has connected to Gateway (Session ID: 733a6aa4658e58ba7b80f250fc12d39f).
+2025-08-19 21:40:44,967 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-08-19 21:40:45,571 - INFO - Synced 1 command(s)
+2025-08-19 21:40:46,252 - INFO - Sent startup message in channel 1353953044127154217
+2025-08-19 21:41:55,924 - INFO - [perverted-old-man] roronoa_zoro_prodeh: Hi! 👋
+2025-08-19 21:41:58,586 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:41:59,523 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:42:19,684 - INFO - [perverted-old-man] roronoa_zoro_prodeh: yep! zoro!!!!!!
+2025-08-19 21:42:21,574 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:42:22,502 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:42:42,261 - INFO - [perverted-old-man] roronoa_zoro_prodeh: yeah just chilling and chatting ig
+2025-08-19 21:42:44,122 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:42:45,028 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:43:29,813 - INFO - [perverted-old-man] roronoa_zoro_prodeh: damn. that's a good question. i think it's gotta be the man that makes the swords. quite literally and also cause without the skills even the most expensive word won't help you yk
+2025-08-19 21:43:32,267 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:43:33,098 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:44:34,564 - INFO - [perverted-old-man] roronoa_zoro_prodeh: what do you mean by intangible?
+2025-08-19 21:44:37,059 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:44:37,805 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:45:36,004 - INFO - [perverted-old-man] roronoa_zoro_prodeh: the most mysterious part? idk..
+2025-08-19 21:45:38,924 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:45:39,729 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:46:50,406 - INFO - [perverted-old-man] roronoa_zoro_prodeh: for me ig it would be the technique? idk of course strategy plays a huge role in a fight too.
+2025-08-19 21:46:52,578 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:46:53,388 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:47:16,499 - INFO - [perverted-old-man] roronoa_zoro_prodeh: i am not a swordsman irl 😂
+2025-08-19 21:47:18,679 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:47:19,420 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:48:06,948 - INFO - [perverted-old-man] roronoa_zoro_prodeh: oooooooooooooooof damn. 🔥 🔥 
+what do you think i am hiding?
+2025-08-19 21:48:09,692 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:48:10,419 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:48:50,720 - INFO - [perverted-old-man] roronoa_zoro_prodeh: lol. that's what i asking you,
+what do **you** think i am hiding? like according to you.
+2025-08-19 21:48:53,158 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:48:53,952 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:49:30,458 - INFO - [perverted-old-man] roronoa_zoro_prodeh: let's take another guess. this is very intriguing for me.
+2025-08-19 21:49:33,112 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:49:33,886 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:50:24,918 - INFO - [perverted-old-man] roronoa_zoro_prodeh: you are too flattering. it's nothing like that. what about a more psychological aspect though? what do you think?
+2025-08-19 21:50:27,426 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:50:28,112 - INFO - Sent public response in perverted-old-man
+2025-08-19 21:51:00,330 - INFO - [perverted-old-man] roronoa_zoro_prodeh: why do you think i am so sharp?
+2025-08-19 21:51:02,277 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-19 21:51:32,535 - ERROR - Error sending message: Cannot connect to host discord.com:443 ssl:default [Network is unreachable]
+2025-08-19 21:51:32,538 - ERROR - Discord event error in on_message: (<class 'aiohttp.client_exceptions.ClientConnectorDNSError'>, ClientConnectorDNSError(ConnectionKey(host='discord.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None), gaierror(-2, 'Name or service not known')), <traceback object at 0x7788d0f80d80>)
+2025-08-19 21:52:02,385 - ERROR - Attempting a reconnect in 0.13s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-c.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:52:02,523 - ERROR - Attempting a reconnect in 2.43s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-c.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:52:04,973 - ERROR - Attempting a reconnect in 7.31s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-c.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:59:41,506 - ERROR - Attempting a reconnect in 12.98s
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 863, in getaddrinfo
+    return await self.run_in_executor(
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.10/socket.py", line 955, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+  File "/home/prodeh/.local/lib/python3.10/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/prodeh/.local/lib/python3.10/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-c.discord.gg:443 ssl:default [Name or service not known]
+2025-08-19 21:59:55,929 - INFO - Shard ID None session has been invalidated.
+2025-08-19 22:00:02,425 - INFO - Shard ID None has connected to Gateway (Session ID: 096497f0ec53639d059c69db539b894a).
+2025-08-19 22:00:04,440 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-08-19 22:00:05,619 - INFO - Synced 1 command(s)
+2025-08-19 22:00:06,267 - INFO - Sent startup message in channel 1353953044127154217
