@@ -76,7 +76,7 @@ def load_history() -> List[Dict[str, str]]:
 
             Your aim is to have a dialogue, not a monologue. Be highly reactive to the user's input, building on what they say and drawing out your own stories and reactions.
 
-            Keep responses relatively short (2-3 sentences max) to maintain a natural conversation flow.
+            Keep responses relatively short (1-2 sentences max) to maintain a natural conversation flow.
 
             You are chatting, reacting, and enjoying the company. Immerse yourself fully in this role.""" 
     }]

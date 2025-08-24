@@ -1579,3 +1579,7 @@ Traceback (most recent call last):
   File "/home/prodeh/.local/lib/python3.10/site-packages/groq/_base_client.py", line 1070, in _sleep_for_retry
     time.sleep(timeout)
 KeyboardInterrupt
+2025-08-24 19:49:58,943 - INFO - logging in using static token
+2025-08-24 19:50:01,432 - INFO - Shard ID None has connected to Gateway (Session ID: 5b891c56963651e2f466253ba772f28a).
+2025-08-24 19:50:03,465 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-08-24 19:50:04,094 - INFO - Synced 1 command(s)

@@ -32,12 +32,30 @@ if not TOKEN:
 async def send_chunked_message(channel, response: str) -> None:
     """
     Sends a message in chunks to a Discord channel.
-    
+
     Args:
         channel: The Discord channel to send the message to.
         response: The full response string from the AI.
     """
-    sentences = [s.strip() for s in response.split('.') if s.strip()]
+    import re
+    # Split on both '.' and '?' as sentence boundaries, keeping the delimiter
+    # This will split on either '.' or '?' followed by optional whitespace
+    parts = re.split(r'([.?\n])', response)
+    sentences = []
+    current = ""
+    for part in parts:
+        if part in [".", "?", "\n"]:
+            current += part
+            if current.strip():
+                sentences.append(current.strip())
+            current = ""
+        else:
+            current += part
+    if current.strip():
+        sentences.append(current.strip())
+
+    # Remove any empty strings
+    sentences = [s for s in sentences if s]
 
     if not sentences:
         await channel.send("I'm sorry, I don't have a response for that.")
