@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 from responses import get_response
 import sys
+import re
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -28,6 +29,24 @@ if not TOKEN:
     logger.error("Discord token not found in environment variables")
     sys.exit(1)
 
+async def send_chunked_message(channel, response: str) -> None:
+    """
+    Sends a message in chunks to a Discord channel.
+    
+    Args:
+        channel: The Discord channel to send the message to.
+        response: The full response string from the AI.
+    """
+    sentences = [s.strip() for s in response.split('.') if s.strip()]
+
+    if not sentences:
+        await channel.send("I'm sorry, I don't have a response for that.")
+        return
+
+    # Send each sentence as a separate message
+    for sentence in sentences:
+        await channel.send(sentence)
+
 async def send_message(message: Message, user_message: str, username: str) -> None:
     if not user_message:
         logger.warning(f"Empty message received from {username}")
@@ -38,20 +57,22 @@ async def send_message(message: Message, user_message: str, username: str) -> No
 
     try:
         response: str = get_response(user_message, username)
+
+        # Use the new chunking function to send the response
         if is_private:
-            await message.author.send(response)
-            logger.info(f"Sent private response to {username}")
+            await send_chunked_message(message.author, response)
+            logger.info(f"Sent private chunked response to {username}")
         else:
-            await message.channel.send(response)
-            logger.info(f"Sent public response in {message.channel}")
+            await send_chunked_message(message.channel, response)
+            logger.info(f"Sent public chunked response in {message.channel}")
+            
     except discord.errors.Forbidden as e:
         logger.error(f"Permission error when sending message: {e}")
         await message.channel.send("I don't have permission to perform this action.")
     except Exception as e:
         logger.error(f"Error sending message: {e}")
         await message.channel.send("An error occurred while processing your message.")
-
-
+        
 @client.tree.command(name="grandpa", description="Chat with Professor William")
 async def grandpa(interaction: discord.Interaction, message: str):
     """
@@ -88,17 +109,6 @@ async def on_ready() -> None:
     except Exception as e:
         logger.error(f"Failed to sync commands: {e}")
 
-    # Send startup message in the main channel
-    channel: Optional[TextChannel] = client.get_channel(CHANNEL_ID)
-    if channel:
-        try:
-            await channel.send("Hello guys!")
-            logger.info(f"Sent startup message in channel {CHANNEL_ID}")
-        except Exception as e:
-            logger.error(f"Failed to send startup message: {e}")
-    else:
-        logger.error(f"Could not find channel with ID {CHANNEL_ID}")
-
 @client.event
 async def on_message(message: Message) -> None:
     if message.channel.id != CHANNEL_ID:
@@ -110,6 +120,14 @@ async def on_message(message: Message) -> None:
     username: str = str(message.author)
     user_message: str = message.content
     channel: str = str(message.channel)
+
+    # Check if user_message contains both "gf" and "prodeh" (case-insensitive, fuzzy)
+    if (
+        re.search(r"g[\W_]*f", user_message, re.IGNORECASE)
+        and re.search(r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h", user_message, re.IGNORECASE)
+    ):
+        await message.channel.send("Sorry, your message cannot contain prohibited words 'gf' and 'prodeh'.")
+        return
 
     logger.info(f"[{channel}] {username}: {user_message}")
     await send_message(message, user_message, username)
