@@ -121,12 +121,14 @@ async def on_message(message: Message) -> None:
     user_message: str = message.content
     channel: str = str(message.channel)
 
-    # Check if user_message contains both "gf" and "prodeh" (case-insensitive, fuzzy)
+    # Check if user_message contains both "gf" or "girlfriend" and "prodeh" (case-insensitive, fuzzy)
+    gf_pattern = r"(g[\W_]*f|g[\W_]*i[\W_]*r[\W_]*l[\W_]*f[\W_]*r[\W_]*i[\W_]*e[\W_]*n[\W_]*d)"
+    prodeh_pattern = r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h"
     if (
-        re.search(r"g[\W_]*f", user_message, re.IGNORECASE)
-        and re.search(r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h", user_message, re.IGNORECASE)
+        re.search(gf_pattern, user_message, re.IGNORECASE)
+        and re.search(prodeh_pattern, user_message, re.IGNORECASE)
     ):
-        await message.channel.send("Sorry, your message cannot contain prohibited words 'gf' and 'prodeh'.")
+        await message.channel.send("Sorry, your message cannot contain prohibited words 'gf'/'girlfriend' and 'prodeh'.")
         return
 
     logger.info(f"[{channel}] {username}: {user_message}")
