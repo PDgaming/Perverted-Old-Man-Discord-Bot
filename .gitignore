@@ -1,4 +1,6 @@
 .env
 .gitignore
 bot.log
+__pycache__
 chat_history.json
+invite.txt
