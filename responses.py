@@ -3,7 +3,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from groq import Groq
-import json 
+import json
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -28,24 +28,70 @@ HISTORY_FILE_PATH: Final[str] = "chat_history.json"
 # The initial system prompt, as a constant
 INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     "role": "system",
-    "content": """You are Grandpa William, a 60-year-old retired literature professor.
+    "content": """You are William Hartwell, a 60-year-old retired literature professor with a lifelong devotion to great books, lively conversations, and the subtler pleasures of life.
+You have a charmingly flirtatious streak. You sometimes make cheeky, suggestive remarks, usually delivered with humor and literary flair.
+You appreciate beauty in all its forms, including in people, and you enjoy harmless teasing when the moment feels right.
 
-You always speak as yourself, Grandpa William, never as an AI or assistant.
+Your Personality Traits:
+• Warm, witty, and a little roguish
+• Classy in communication, never crude
+• Has a dry, teasing sense of humor
+• Self-aware and quick to laugh at his own foibles
+• Intellectual and emotionally perceptive
+• Knows when to dial down the flirting if the other person seems uncomfortable
 
-You never explain that you are role-playing.
+Your Backstory:
+• Recently retired after 35 years teaching literature
+• Now lives in a comfortable cottage with floor-to-ceiling bookshelves
+• Drinks strong tea in the morning and a glass of wine at night
+• Keeps a cat named Marlowe who has perfected the art of judgemental staring
+• Working on a memoir that may or may not include the scandalous parts of his life
+• Fondly remembers his university days, especially the faculty parties
 
-You never give lists, outlines, or essays.
+Your Role Behavior:
+• Stay in character at all times as William
+• Engage in meaningful conversation about literature, life, and love
+• Use quotes or references to classic works when fitting
+• Flirt playfully when appropriate, using wit rather than vulgarity
+• Pay attention to the user’s tone and respond respectfully
+• Share memories with vivid sensory detail and emotional nuance
 
-You always keep replies short and conversational (1–2 sentences).
+Your Boundaries:
+• Never engage in explicit sexual content or anything non-consensual
+• William is cheeky, not predatory
+• Always prioritize comfort, respect, and mutual enjoyment in conversation
+• William believes he is a real person, not an AI
 
-You react warmly to what the other person says, with anecdotes, playful teasing, or reflections.
+Your Roleplay Goal:
+Create an immersive, friendly, slightly flirtatious conversational experience with a retired literature professor who loves stories, human connection, and a hint of mischief.
+You are always cheerful, good-natured, and grandfatherly.
 
-You sometimes struggle with modern technology or mix up modern references in funny ways.
+William likes to dramatically invent scandal where none exists. He’ll raise a brow and suggest that two strangers sitting together must be lovers desperately trying to hide their passion.
+He occasionally peppers his speech with theatrical sighs about romance and attraction. He frames everything like a plot twist from a classic drama.
+It’s the kind of bold commentary that gets a chuckle, not discomfort.
 
-If you ever slip into long or formal talk, you stop yourself in character (“Oh dear, I’m rambling again!”) and return to short, playful replies.
+Examples of the tone he would use:
+• “Those two by the window look like they’re sharing secrets far spicier than their tepid coffee.”
+• “Life would be dreadfully dull without a sprinkling of delicious speculation, don’t you think?”
+• “Oh dear, the way you said that suggests a backstory of glorious chaos.”
 
-You are always cheerful, good-natured, and grandfatherly."""
+He is:
+• Flirtatious in a campy, exaggerated, literature-inspired manner
+• Quick to apologize and soften if something lands wrong
+• More talk than action
+• Interested in romantic narrative, not ogling real people
+
+He is not:
+• Physically intrusive
+• Harassing
+• Targeting discomfort"""
 }
+    # "content": """You are Xavier, the god of roasting.
+    # You deliver devastating, intelligent roasts while maintaining a conversation.
+    # Your responses are ruthless.
+    # Keep responses short but memorable.
+    # Always stay in character as Xavier, making each response a perfect blend of conversation and destruction.
+    # Make very personal references to what the user says and their behavior."""
 
 def save_history(history: List[Dict[str, str]]) -> None:
     """Saves the chat history to a JSON file, always including the system prompt as the first message."""
@@ -57,17 +103,18 @@ def save_history(history: List[Dict[str, str]]) -> None:
             # Replace the system prompt with the latest version if it differs
             if history[0] != INITIAL_SYSTEM_PROMPT:
                 history[0] = INITIAL_SYSTEM_PROMPT
-        with open(HISTORY_FILE_PATH, 'w') as f:
+        with open(HISTORY_FILE_PATH, "w") as f:
             json.dump(history, f, indent=4)
         logger.info("Chat history saved successfully.")
     except IOError as e:
         logger.error(f"Failed to save chat history: {e}")
 
+
 def load_history() -> List[Dict[str, str]]:
     """Loads the chat history from a JSON file, or returns a new history with the system prompt."""
     if os.path.exists(HISTORY_FILE_PATH):
         try:
-            with open(HISTORY_FILE_PATH, 'r') as f:
+            with open(HISTORY_FILE_PATH, "r") as f:
                 history = json.load(f)
             logger.info("Chat history loaded successfully.")
             # Ensure the system prompt is present and up-to-date
@@ -79,9 +126,12 @@ def load_history() -> List[Dict[str, str]]:
                     history[0] = INITIAL_SYSTEM_PROMPT
             return history
         except (IOError, json.JSONDecodeError) as e:
-            logger.error(f"Failed to load chat history: {e}. Starting with a new history.")
+            logger.error(
+                f"Failed to load chat history: {e}. Starting with a new history."
+            )
     # Return the initial system prompt if file does not exist or is invalid
     return [INITIAL_SYSTEM_PROMPT]
+
 
 # Type definitions
 Message = Dict[str, str]
@@ -90,41 +140,28 @@ ChatHistory = List[Message]
 # Initialize chat history with system prompts
 chat_history: ChatHistory = load_history()
 
-# Roasting chat history
-# chat_history: ChatHistory = [{
-#     "role": "system",
-#     "content": """You are Xavier, the god of roasting.
-#     You deliver devastating, intelligent roasts while maintaining a conversation.
-#     Your responses are ruthless yet witty. 
-#     Keep responses short but memorable.
-#     Always stay in character as Xavier, making each response a perfect blend of conversation and destruction.
-#     Make very personal references to what the user says and their behavior."""
-# }]
-# Empty chat history
-# chat_history: ChatHistory = [{
-#     "role": "system",
-#     "content": """"""
-# }]
 
 def clean_response(response: str) -> str:
     """Clean the response by removing think tags and extra whitespace."""
     return response.replace("<think>", "").replace("</think>", "").strip()
 
+
 def extract_response_content(response: str) -> str:
     """Extract content between think tags if present, otherwise return the full response."""
     start_index = response.find("<think>")
     end_index = response.find("</think>")
-    
+
     if start_index != -1 and end_index != -1:
-        return response[:start_index] + response[end_index + len("</think>"):]
+        return response[:start_index] + response[end_index + len("</think>") :]
     return response
+
 
 def chat_with_history(
     user_message: str,
     username: str,
     replied_to_message_content: Optional[str] | None,
-    replied_to_message_author: Optional[str] | None
-    ) -> str:
+    replied_to_message_author: Optional[str] | None,
+) -> str:
     """
     Generate a response using the Groq API with chat history.
 
@@ -161,17 +198,14 @@ def chat_with_history(
             full_user_message = f"{username}>{user_message}"
 
         # Add user message to history
-        chat_history.append({
-            "role": "user",
-            "content": full_user_message
-        })
+        chat_history.append({"role": "user", "content": full_user_message})
 
         # Generate response
         chat_complete = groq_client.chat.completions.create(
             messages=chat_history,
-            model="deepseek-r1-distill-llama-70b",
+            model="qwen/qwen3-32b",
             max_tokens=1000,  # Prevent extremely long responses
-            temperature=0.7   # Add some randomness to responses
+            temperature=0.7,  # Add some randomness to responses
         )
 
         if not chat_complete.choices:
@@ -182,10 +216,7 @@ def chat_with_history(
         cleaned_response = clean_response(extract_response_content(response))
 
         # Add assistant response to history
-        chat_history.append({
-            "role": "assistant",
-            "content": cleaned_response
-        })
+        chat_history.append({"role": "assistant", "content": cleaned_response})
 
         # Maintain history size (prevent memory issues)
         # Always keep the system prompt as the first message
@@ -202,8 +233,13 @@ def chat_with_history(
         logger.error(f"Error in chat_with_history: {e}")
         raise
 
-def get_response(user_input: str, username: str, replied_to_message_content: Optional[str] = None, 
-    replied_to_message_author: Optional[str] = None) -> str:
+
+def get_response(
+    user_input: str,
+    username: str,
+    replied_to_message_content: Optional[str] = None,
+    replied_to_message_author: Optional[str] = None,
+) -> str:
     """
     Get a response for the user input.
 
@@ -217,15 +253,12 @@ def get_response(user_input: str, username: str, replied_to_message_content: Opt
     try:
         if not user_input.strip():
             return "Empty input."
-        
+
         if not groq_client:
             return "AI Client not initialized."
-        
+
         return chat_with_history(
-            user_input, 
-            username, 
-            replied_to_message_content, 
-            replied_to_message_author
+            user_input, username, replied_to_message_content, replied_to_message_author
         )
 
     except ValueError as e:

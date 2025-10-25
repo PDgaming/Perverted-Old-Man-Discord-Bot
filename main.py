@@ -14,8 +14,6 @@ import shlex
 import psutil
 import prctl
 
-prctl.set_name("pervertedOldMan")
-
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     handlers=[
@@ -108,7 +106,7 @@ async def start_minecraft_server():
     Returns:
         dict: Status information including success, method used, and any errors
     """
-    script_path = "/mnt/Software/UnitedBlocks/start.sh"
+    script_path = "/mnt/Software/UnitedBlocks/UnitedBlocks.sh"
 
     try:
         if not os.path.exists(script_path):
@@ -180,7 +178,7 @@ async def start_with_terminal(script_path):
 
         # Run start.sh in the left pane (pane 0)
         process = await asyncio.create_subprocess_exec(
-                "tmux", "send-keys", "-t", "unitedblocks:0.0", "cd /mnt/Software/UnitedBlocks && ./start.sh", "C-m",
+                "tmux", "send-keys", "-t", "unitedblocks:0.0", "cd /mnt/Software/UnitedBlocks && ./UnitedBlocks.sh", "C-m",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
@@ -196,7 +194,11 @@ async def start_with_terminal(script_path):
 
         # Attach to the tmux session in a new terminal window
         process = await asyncio.create_subprocess_exec(
-                "gnome-terminal", "--", "tmux", "attach-session", "-t", "unitedblocks",
+                "konsole",
+                "--separate",
+                "--hide-menubar",
+                "-e",
+                "tmux attach-session -t unitedblocks",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
@@ -226,15 +228,13 @@ def is_minecraft_server_running():
         bool: True if the server is running, False otherwise
     """
     try:
-        for proc in psutil.process_iter(["pid", "name", "cmdline"]):
+        for proc in psutil.process_iter(["name"]):
             try:
-                cmdline = ' '.join(proc.info['cmdline'] or [])
-                if 'start.sh' in cmdline.lower():
+                if 'UnitedBlocks.sh'.lower() in proc.info["name"].lower():
                     logger.info("Minecraft server is running.")
                     return True
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
-        logger.info("Minecraft server is not running.")
         return False
     except Exception:
         logger.info("Minecraft server is not running.")
