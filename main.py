@@ -44,13 +44,13 @@ async def send_chunked_message(channel, response: str) -> None:
         response: The full response string from the AI.
     """
     import re
-    # Split on both '.' and '?' as sentence boundaries, keeping the delimiter
+    # Split on '?' as sentence boundaries, keeping the delimiter
     # This will split on either '.' or '?' followed by optional whitespace
     parts = re.split(r'([.?\n])', response)
     sentences = []
     current = ""
     for part in parts:
-        if part in [".", "?", "\n"]:
+        if part in ["?", "\n"]:
             current += part
             if current.strip():
                 sentences.append(current.strip())
@@ -218,7 +218,6 @@ async def start_with_terminal(script_path):
             "method": "tmux",
             "error": f"Terminal method failed: {e}"
         }
-
 
 def is_minecraft_server_running():
     """

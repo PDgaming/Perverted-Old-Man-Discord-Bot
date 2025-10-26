@@ -40494,3 +40494,1536 @@ aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gatewa
 2025-10-25 21:32:40,056 - INFO - Shard ID None has connected to Gateway (Session ID: c82997eb2840fb42f56f68f56315ba55).
 2025-10-25 21:32:42,071 - INFO - Bot PervertedOldMan#3932 is now running!
 2025-10-25 21:32:42,683 - INFO - Synced 2 command(s)
+2025-10-25 21:34:53,304 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Hello 👋
+2025-10-25 21:34:54,839 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-25 21:34:54,867 - INFO - Chat history saved successfully.
+2025-10-25 21:34:58,701 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-25 22:32:52,310 - INFO - Shard ID None has successfully RESUMED session c82997eb2840fb42f56f68f56315ba55.
+2025-10-25 23:13:08,384 - INFO - Shard ID None has successfully RESUMED session c82997eb2840fb42f56f68f56315ba55.
+2025-10-26 10:10:18,573 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 10:10:18,585 - INFO - logging in using static token
+2025-10-26 10:10:22,574 - INFO - Shard ID None has connected to Gateway (Session ID: 29786ddfb1d937dc49591a2dfdc1ecb3).
+2025-10-26 10:10:24,612 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 10:10:25,101 - INFO - Synced 2 command(s)
+2025-10-26 10:31:58,918 - ERROR - Attempting a reconnect in 0.15s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:31:59,099 - ERROR - Attempting a reconnect in 0.27s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:31:59,377 - ERROR - Attempting a reconnect in 7.30s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:32:06,694 - ERROR - Attempting a reconnect in 10.48s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:32:17,184 - ERROR - Attempting a reconnect in 19.90s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:32:37,111 - ERROR - Attempting a reconnect in 44.14s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:33:21,305 - ERROR - Attempting a reconnect in 116.84s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 10:35:18,256 - ERROR - Attempting a reconnect in 140.74s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Name or service not known]
+2025-10-26 10:37:40,751 - INFO - Shard ID None session has been invalidated.
+2025-10-26 10:37:47,516 - INFO - Shard ID None has connected to Gateway (Session ID: ca928859db38c897be03e290d5cb3aa6).
+2025-10-26 10:37:49,528 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 10:37:50,284 - INFO - Synced 2 command(s)
+2025-10-26 10:58:41,091 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 11:06:15,947 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 11:14:09,382 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 12:08:26,107 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 13:55:34,403 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 15:45:43,452 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 16:07:22,621 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 16:42:16,370 - INFO - Shard ID None has successfully RESUMED session ca928859db38c897be03e290d5cb3aa6.
+2025-10-26 17:41:01,449 - ERROR - Attempting a reconnect in 1.35s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:41:02,819 - ERROR - Attempting a reconnect in 0.33s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:41:03,162 - ERROR - Attempting a reconnect in 2.58s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:41:05,752 - ERROR - Attempting a reconnect in 5.26s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:41:11,026 - ERROR - Attempting a reconnect in 25.80s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:41:36,868 - ERROR - Attempting a reconnect in 45.54s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:42:22,462 - ERROR - Attempting a reconnect in 45.91s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 17:43:10,216 - INFO - Shard ID None session has been invalidated.
+2025-10-26 17:43:17,068 - INFO - Shard ID None has connected to Gateway (Session ID: 6f989dcf313a469fc905d66aafa63af2).
+2025-10-26 17:43:19,079 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 17:43:19,958 - INFO - Synced 2 command(s)
+2025-10-26 18:53:16,604 - INFO - Shard ID None has successfully RESUMED session 6f989dcf313a469fc905d66aafa63af2.
+2025-10-26 19:33:57,037 - INFO - Shard ID None has successfully RESUMED session 6f989dcf313a469fc905d66aafa63af2.
+2025-10-26 19:56:57,145 - ERROR - Attempting a reconnect in 0.70s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:56:57,851 - ERROR - Attempting a reconnect in 1.39s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:56:59,255 - ERROR - Attempting a reconnect in 7.37s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:57:06,637 - ERROR - Attempting a reconnect in 4.97s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:57:11,615 - ERROR - Attempting a reconnect in 9.27s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:57:20,903 - ERROR - Attempting a reconnect in 40.53s
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1179, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 40, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/lib/python3.13/socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/client.py", line 724, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/gateway.py", line 383, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/discord/http.py", line 566, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1067, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/Programming/programming/Github/Perverted-Old-Man-Discord-Bot/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1538, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [Temporary failure in name resolution]
+2025-10-26 19:58:07,592 - INFO - Shard ID None session has been invalidated.
+2025-10-26 19:58:14,099 - INFO - Shard ID None has connected to Gateway (Session ID: 559718947ed75fde7af355e1582fa72e).
+2025-10-26 19:58:16,109 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 19:58:17,473 - INFO - Synced 2 command(s)
+2025-10-26 20:43:48,732 - INFO - Shard ID None has successfully RESUMED session 559718947ed75fde7af355e1582fa72e.
+2025-10-26 21:11:55,244 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 21:11:55,246 - INFO - logging in using static token
+2025-10-26 21:11:57,615 - INFO - Shard ID None has connected to Gateway (Session ID: f8e5dcadf4d9817b8d323d40a3ead557).
+2025-10-26 21:11:59,646 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 21:12:00,310 - INFO - Synced 2 command(s)
+2025-10-26 22:34:58,319 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: hi grandpa williams 👋 
+how are you today?
+2025-10-26 22:35:00,673 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-26 22:35:00,692 - INFO - Chat history saved successfully.
+2025-10-26 22:35:20,097 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-26 22:36:08,545 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Message ignored due to '!ignore' prefix.
+2025-10-26 22:40:17,657 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 22:40:17,658 - INFO - logging in using static token
+2025-10-26 22:40:19,973 - INFO - Shard ID None has connected to Gateway (Session ID: 15c44a5a1d6092641bc8477bebe643e3).
+2025-10-26 22:40:20,709 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Hello 👋
+2025-10-26 22:40:22,291 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-26 22:40:22,308 - INFO - Chat history saved successfully.
+2025-10-26 22:40:22,309 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 22:40:23,049 - INFO - Synced 2 command(s)
+2025-10-26 22:40:28,590 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-26 22:41:26,225 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Message ignored due to '!ignore' prefix.
+2025-10-26 22:45:40,403 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 22:45:40,405 - INFO - logging in using static token
+2025-10-26 22:45:42,746 - INFO - Shard ID None has connected to Gateway (Session ID: d8a0e33e2587c32a3415d7002622cc7e).
+2025-10-26 22:45:44,768 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 22:45:45,420 - INFO - Synced 2 command(s)
+2025-10-26 22:45:55,901 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Hello 👋
+2025-10-26 22:45:57,658 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-26 22:45:57,671 - INFO - Chat history saved successfully.
+2025-10-26 22:45:59,570 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-26 22:47:06,541 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 22:47:06,543 - INFO - logging in using static token
+2025-10-26 22:47:08,905 - INFO - Shard ID None has connected to Gateway (Session ID: feeaa2bd397bc9ec04a748155eb16c87).
+2025-10-26 22:47:09,368 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Hello 👋
+2025-10-26 22:47:10,921 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-26 22:47:10,939 - INFO - Chat history saved successfully.
+2025-10-26 22:47:10,952 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 22:47:11,846 - INFO - Synced 2 command(s)
+2025-10-26 22:47:12,502 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-26 22:48:00,130 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Message ignored due to '!ignore' prefix.
+2025-10-26 22:53:02,334 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-10-26 22:53:02,336 - INFO - logging in using static token
+2025-10-26 22:53:04,799 - INFO - Shard ID None has connected to Gateway (Session ID: c47fc1a2d457fd1d19f5a6b11b3b592e).
+2025-10-26 22:53:06,830 - INFO - Bot PervertedOldMan#3932 is now running!
+2025-10-26 22:53:07,432 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Hello 👋
+2025-10-26 22:53:08,095 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-26 22:53:08,114 - INFO - Chat history saved successfully.
+2025-10-26 22:53:08,115 - INFO - Synced 2 command(s)
+2025-10-26 22:53:09,963 - INFO - Sent public chunked response in 👨🏻‍🦳│perverted-old-man│
+2025-10-26 22:53:34,276 - INFO - [👨🏻‍🦳│perverted-old-man│] jinbe_prodeh: Message ignored due to '!ignore' prefix.
