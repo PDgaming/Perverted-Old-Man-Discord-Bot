@@ -517,12 +517,19 @@ async def on_message(message: Message) -> None:
         except Exception as e:
             logger.error(f"Error fetching replied message: {e}")
 
-    if message.channel.id != PervertedOldMan_Channel and not is_reply_to_bot:
+    is_bot_mentioned = client.user.mentioned_in(message)
+
+    if not is_bot_mentioned and message.channel.id != PervertedOldMan_Channel and not is_reply_to_bot:
         logger.info(f"on_message: ignoring msg {msg_id} — wrong channel and not reply to bot")
         return
 
+    if is_bot_mentioned:
+        logger.info(
+            f"[{channel}] {username}: Bot mentioned in msg {msg_id}, bypassing channel filter."
+        )
+
     # In PervertedOldMan_Channel, ignore replies to other users unless "grandpa" is in the message
-    if (
+    if not is_bot_mentioned and (
         message.channel.id == PervertedOldMan_Channel
         and message.reference
         and not is_reply_to_bot
