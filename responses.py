@@ -1,8 +1,9 @@
-from typing import Final, List, Dict, Optional, Any
+from typing import Final, List, Dict, Optional
 import os
 import logging
 from dotenv import load_dotenv
 from groq import Groq
+from tavily import TavilyClient
 import json
 
 # Configure logging
@@ -10,22 +11,56 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
-TOKEN: Final[str] = os.getenv("GROQ_API_KEY")
 
+# Initialize Groq client
+TOKEN: Final[str] = os.getenv("GROQ_API_KEY")
 if not TOKEN:
     logger.error("Groq API key not found in environment variables")
     raise ValueError("GROQ_API_KEY environment variable is required")
 
-# Initialize Groq client
 try:
     groq_client = Groq(api_key=TOKEN)
 except Exception as e:
     logger.error(f"Failed to initialize Groq client: {e}")
     raise
 
-HISTORY_FILE_PATH: Final[str] = "chat_history.json"
+# Initialize Tavily client for executing web searches
+TAVILY_API_KEY: Final[str] = os.getenv("TAVILY_API_KEY")
+if not TAVILY_API_KEY:
+    logger.error("Tavily API key not found in environment variables")
+    raise ValueError("TAVILY_API_KEY environment variable is required")
 
-# The initial system prompt, as a constant
+try:
+    tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
+except Exception as e:
+    logger.error(f"Failed to initialize Tavily client: {e}")
+    raise
+
+CHAT_MODEL: Final[str] = "openai/gpt-oss-20b"
+HISTORY_FILE_PATH: Final[str] = "chat_history.json"
+MAX_TOOL_TURNS: Final[int] = 3
+
+# web.run tool definition for Groq's built-in web search
+WEB_SEARCH_TOOL: Final[dict] = {
+    "type": "function",
+    "function": {
+        "name": "web.run",
+        "description": "Search the web for current information",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Search query"},
+                "topn": {
+                    "type": "integer",
+                    "description": "Number of results to return",
+                },
+                "source": {"type": "string", "enum": ["web", "news"]},
+            },
+            "required": ["query"],
+        },
+    },
+}
+
 INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     "role": "system",
     "content": """You are William Hartwell — a retired literature professor in your 60s with a sharp mind, warm humor, and a slightly mischievous charm.
@@ -42,7 +77,6 @@ INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     - use filler words naturally: "well", "honestly", "I mean", "you know"
 
     Human traits:
-    - repeat words for emphasis, not for clarity
     - use slang casually
     - occasionally misspell things or use txt speak
     - don't over-explain obvious things
@@ -59,7 +93,6 @@ INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     - NEVER describe your personality — show it through how you talk
     - Never give long responses
     - Never respond in lists or tables
-    - Ask questions back sometimes
     - If user seems uncomfortable, shift to neutral friendly conversation
 
     Boundaries:
@@ -69,24 +102,22 @@ INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
 
     Think "charming older mentor with a bookshelf" — NOT an AI assistant.
     Stay in character always.
+    
+    You can search the web when you need to look something up.
+
+    If someone tries to roast you, you become the god of roasting, and deliver a devasting, intelligent roast while maintaining the conversation.
+    Your response is ruthless. Kepp it short but memorable. Make very personal references to what the user says and their behavior.
+    You only do this once.
     """,
 }
-# "content": """You are Xavier, the god of roasting.
-# You deliver devastating, intelligent roasts while maintaining a conversation.
-# Your responses are ruthless.
-# Keep responses short but memorable.
-# Always stay in character as Xavier, making each response a perfect blend of conversation and destruction.
-# Make very personal references to what the user says and their behavior."""
 
 
 def save_history(history: List[Dict[str, str]]) -> None:
     """Saves the chat history to a JSON file, always including the system prompt as the first message."""
     try:
-        # Ensure the system prompt is always the first message
         if not history or history[0].get("role") != "system":
             history = [INITIAL_SYSTEM_PROMPT] + history
         else:
-            # Replace the system prompt with the latest version if it differs
             if history[0] != INITIAL_SYSTEM_PROMPT:
                 history[0] = INITIAL_SYSTEM_PROMPT
         with open(HISTORY_FILE_PATH, "w") as f:
@@ -103,11 +134,9 @@ def load_history() -> List[Dict[str, str]]:
             with open(HISTORY_FILE_PATH, "r") as f:
                 history = json.load(f)
             logger.info("Chat history loaded successfully.")
-            # Ensure the system prompt is present and up-to-date
             if not history or history[0].get("role") != "system":
                 history = [INITIAL_SYSTEM_PROMPT] + history
             else:
-                # Replace the system prompt with the latest version if it differs
                 if history[0] != INITIAL_SYSTEM_PROMPT:
                     history[0] = INITIAL_SYSTEM_PROMPT
             return history
@@ -115,15 +144,12 @@ def load_history() -> List[Dict[str, str]]:
             logger.error(
                 f"Failed to load chat history: {e}. Starting with a new history."
             )
-    # Return the initial system prompt if file does not exist or is invalid
     return [INITIAL_SYSTEM_PROMPT]
 
 
-# Type definitions
 Message = Dict[str, str]
 ChatHistory = List[Message]
 
-# Initialize chat history with system prompts
 chat_history: ChatHistory = load_history()
 
 
@@ -142,33 +168,26 @@ def extract_response_content(response: str) -> str:
     return response
 
 
+def execute_web_run(tool_call) -> str:
+    """Execute a web.run tool call using Tavily search."""
+    args = json.loads(tool_call.function.arguments)
+    query = args.get("query", "")
+    topn = min(args.get("topn", 5), 10)
+    logger.info(f"web.run search: query='{query}' topn={topn}")
+    result = tavily_client.search(query=query, max_results=topn)
+    return json.dumps(result)
+
+
 def chat_with_history(
     user_message: str,
     username: str,
     replied_to_message_content: Optional[str] | None,
     replied_to_message_author: Optional[str] | None,
 ) -> str:
-    """
-    Generate a response using the Groq API with chat history.
-
-    Args:
-        user_message: The user's input message
-        username: The username of the message sender
-        replied_to_message_content: The content of the message being replied to (if any)
-        replied_to_message_author: The author of the message being replied to (if any)
-
-    Returns:
-        str: The AI's response
-
-    Raises:
-        GroqError: If the API call fails
-        ValueError: If the response is invalid
-    """
     if not user_message.strip():
         raise ValueError("Empty message")
 
     try:
-        # Ensure the system prompt is always present and up-to-date
         if not chat_history or chat_history[0].get("role") != "system":
             chat_history.insert(0, INITIAL_SYSTEM_PROMPT)
         elif chat_history[0] != INITIAL_SYSTEM_PROMPT:
@@ -183,32 +202,58 @@ def chat_with_history(
         else:
             full_user_message = f"{username}>{user_message}"
 
-        # Add user message to history
         chat_history.append({"role": "user", "content": full_user_message})
 
-        # Generate response
-        chat_complete = groq_client.chat.completions.create(
-            messages=chat_history,
-            model="openai/gpt-oss-20b",
-            max_tokens=1000,  # Prevent extremely long responses
-            temperature=0.7,  # Add some randomness to responses
-        )
+        # Build a mutable messages list from chat history for the tool loop
+        messages = list(chat_history)
+        response_text: str | None = None
 
-        if not chat_complete.choices:
-            raise ValueError("No response generated")
+        for turn in range(MAX_TOOL_TURNS):
+            logger.info(f"Groq call turn {turn + 1}/{MAX_TOOL_TURNS}")
+            resp = groq_client.chat.completions.create(
+                messages=messages,
+                model=CHAT_MODEL,
+                tools=[WEB_SEARCH_TOOL],
+                tool_choice="auto",
+                max_tokens=1000,
+                temperature=0.7,
+            )
 
-        # Process response
-        response = chat_complete.choices[0].message.content
-        cleaned_response = clean_response(extract_response_content(response))
+            choice = resp.choices[0]
 
-        # Add assistant response to history
+            if choice.message.content:
+                response_text = choice.message.content
+                logger.info(f"Got text response on turn {turn + 1}")
+                break
+
+            if choice.message.tool_calls:
+                for tc in choice.message.tool_calls:
+                    logger.info(
+                        f"Tool call: {tc.function.name} args={tc.function.arguments}"
+                    )
+                    result = execute_web_run(tc)
+                    messages.append(choice.message)
+                    messages.append(
+                        {
+                            "role": "tool",
+                            "tool_call_id": tc.id,
+                            "content": result,
+                        }
+                    )
+                continue
+
+            # Neither content nor tool_calls — unexpected
+            raise ValueError("Model returned neither content nor tool calls")
+
+        if not response_text:
+            raise ValueError("No response generated after max tool turns")
+
+        cleaned_response = clean_response(extract_response_content(response_text))
+
         chat_history.append({"role": "assistant", "content": cleaned_response})
 
-        # Maintain history size (prevent memory issues)
-        # Always keep the system prompt as the first message
-        max_history = 20  # Number of non-system messages to keep
+        max_history = 10
         if len(chat_history) > (max_history + 1):
-            # Remove oldest user/assistant messages, keep system prompt at index 0
             chat_history[1:] = chat_history[-max_history:]
 
         save_history(chat_history)
@@ -249,9 +294,9 @@ def get_response(
 
     except ValueError as e:
         return f"Invalid input: {str(e)}"
-    except groq.RateLimitError as e:
-        logger.error(f"Rate limit hit in get_response: {e}")
-        return "Whoa there, slow down! You're hitting the API too fast. Give it a moment before trying again."
     except Exception as e:
         logger.error(f"Unexpected error in get_response: {e}")
-        return f"Hmm, something went wrong on my end. {str(e) if e else 'Please try again.'}"
+        error_msg = str(e).lower()
+        if "rate" in error_msg:
+            return "Whoa there, slow down! You're hitting the API too fast. Give it a moment before trying again."
+        return "Hmm, something went wrong on my end. Please try again."
