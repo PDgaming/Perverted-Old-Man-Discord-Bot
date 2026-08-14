@@ -57,6 +57,24 @@ async def send_chunked_message(channel, response: str) -> None:
         await channel.send(response[i : i + max_length])
 
 
+def get_user_context(author) -> dict:
+    """
+    Builds the user context (user ID, Discord roles, display name) for the LLM.
+
+    Args:
+        author: The Discord member or user sending the message.
+
+    Returns:
+        dict: The user context for the message sender.
+    """
+    roles = [r.name for r in getattr(author, "roles", []) if r.name != "@everyone"]
+    return {
+        "user_id": author.id,
+        "roles": roles,
+        "display_name": getattr(author, "display_name", None) or author.name,
+    }
+
+
 async def send_message(
     message: Message,
     user_message: str,
@@ -72,12 +90,20 @@ async def send_message(
     user_message = user_message[1:] if is_private else user_message
 
     try:
-        response: str = get_response(
-            user_message,
-            username,
-            replied_to_message_content,
-            replied_to_message_author,
-        )
+        typing_channel = message.author if is_private else message.channel
+
+        user_context = get_user_context(message.author)
+
+        async with typing_channel.typing():
+            response: str = get_response(
+                user_message,
+                username,
+                replied_to_message_content,
+                replied_to_message_author,
+                user_id=user_context["user_id"],
+                roles=user_context["roles"],
+                display_name=user_context["display_name"],
+            )
 
         logger.info(f"send_message: sending response (len={len(response)}): '{response[:100]}...'")
 
@@ -304,12 +330,18 @@ class GrandpaReplyModal(Modal, title="Reply to Message"):
 
             logger.info(f"[{channel}] {username} (replying to {replied_to_message_author}): {user_message}")
 
-            response: str = get_response(
-                user_message,
-                username,
-                replied_to_message_content,
-                replied_to_message_author,
-            )
+            user_context = get_user_context(interaction.user)
+
+            async with interaction.channel.typing():
+                response: str = get_response(
+                    user_message,
+                    username,
+                    replied_to_message_content,
+                    replied_to_message_author,
+                    user_id=user_context["user_id"],
+                    roles=user_context["roles"],
+                    display_name=user_context["display_name"],
+                )
 
             combined = (
                 f"**{username}** (replying to **{replied_to_message_author}**): {user_message}\n\n"
@@ -390,10 +422,19 @@ def setup_commands(tree: app_commands.CommandTree):
 
             logger.info(f"[{channel}] {username}: {message}")
 
+            user_context = get_user_context(interaction.user)
+
             # Get response with reply context (now possibly filled)
-            response: str = get_response(
-                message, username, replied_to_message_content, replied_to_message_author
-            )
+            async with interaction.channel.typing():
+                response: str = get_response(
+                    message,
+                    username,
+                    replied_to_message_content,
+                    replied_to_message_author,
+                    user_id=user_context["user_id"],
+                    roles=user_context["roles"],
+                    display_name=user_context["display_name"],
+                )
 
             # Send both the user's message and William's response in a single followup
             combined = f"**{username}:** {message}\n\n**William:** {response}"
