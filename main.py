@@ -1,11 +1,10 @@
-from typing import Final
+from typing import Final, Optional
 import os
 import logging
 from dotenv import load_dotenv
-from discord import Intents, Client, Message, NotFound, TextChannel, app_commands, TextStyle
+from discord import Intents, Client, Message, NotFound, TextChannel, app_commands
 import discord
 from discord.ext import commands
-from discord.ui import Modal, TextInput
 from responses import get_response
 import sys
 import re
@@ -37,42 +36,40 @@ if not TOKEN:
 
 async def send_chunked_message(channel, response: str) -> None:
     """
-    Sends a message to a Discord channel, splitting into multiple messages
-    only if it exceeds Discord's 2000-character limit.
+    Sends a message in chunks to a Discord channel.
 
     Args:
         channel: The Discord channel to send the message to.
         response: The full response string from the AI.
     """
-    if not response.strip():
+    import re
+
+    # Split on '?' as sentence boundaries, keeping the delimiter
+    # This will split on either '.' or '?' followed by optional whitespace
+    parts = re.split(r"([.?\n])", response)
+    sentences = []
+    current = ""
+    for part in parts:
+        if part in ["?", "\n"]:
+            current += part
+            if current.strip():
+                sentences.append(current.strip())
+            current = ""
+        else:
+            current += part
+    if current.strip():
+        sentences.append(current.strip())
+
+    # Remove any empty strings
+    sentences = [s for s in sentences if s]
+
+    if not sentences:
         await channel.send("I'm sorry, I don't have a response for that.")
         return
 
-    max_length = 2000
-    if len(response) <= max_length:
-        await channel.send(response)
-        return
-
-    for i in range(0, len(response), max_length):
-        await channel.send(response[i : i + max_length])
-
-
-def get_user_context(author) -> dict:
-    """
-    Builds the user context (user ID, Discord roles, display name) for the LLM.
-
-    Args:
-        author: The Discord member or user sending the message.
-
-    Returns:
-        dict: The user context for the message sender.
-    """
-    roles = [r.name for r in getattr(author, "roles", []) if r.name != "@everyone"]
-    return {
-        "user_id": author.id,
-        "roles": roles,
-        "display_name": getattr(author, "display_name", None) or author.name,
-    }
+    # Send each sentence as a separate message
+    for sentence in sentences:
+        await channel.send(sentence)
 
 
 async def send_message(
@@ -81,6 +78,9 @@ async def send_message(
     replied_to_message_content: str | None,
     replied_to_message_author: str | None,
     username: str,
+    user_id: int | None = None,
+    roles: list[str] | None = None,
+    display_name: str | None = None,
 ) -> None:
     if not user_message:
         logger.warning(f"Empty message received from {username}")
@@ -90,22 +90,15 @@ async def send_message(
     user_message = user_message[1:] if is_private else user_message
 
     try:
-        typing_channel = message.author if is_private else message.channel
-
-        user_context = get_user_context(message.author)
-
-        async with typing_channel.typing():
-            response: str = get_response(
-                user_message,
-                username,
-                replied_to_message_content,
-                replied_to_message_author,
-                user_id=user_context["user_id"],
-                roles=user_context["roles"],
-                display_name=user_context["display_name"],
-            )
-
-        logger.info(f"send_message: sending response (len={len(response)}): '{response[:100]}...'")
+        response: str = get_response(
+            user_message,
+            username,
+            replied_to_message_content,
+            replied_to_message_author,
+            user_id=user_id,
+            roles=roles,
+            display_name=display_name,
+        )
 
         # Use the new chunking function to send the response
         if is_private:
@@ -231,28 +224,24 @@ async def start_with_terminal(script_path):
         )
         await process.wait()
 
-        # Try to attach to the tmux session in a new terminal window
-        # This is non-fatal — the server is already running in tmux
-        try:
-            process = await asyncio.create_subprocess_exec(
-                "konsole",
-                "--separate",
-                "--hide-menubar",
-                "-e",
-                "tmux attach-session -t unitedblocks",
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-            )
-            await asyncio.sleep(1)
-        except FileNotFoundError:
-            logger.info("konsole not available, server running in tmux headless mode")
-        except Exception as e:
-            logger.warning(f"Could not open terminal window: {e}")
+        # Attach to the tmux session in a new terminal window
+        process = await asyncio.create_subprocess_exec(
+            "konsole",
+            "--separate",
+            "--hide-menubar",
+            "-e",
+            "tmux attach-session -t unitedblocks",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+
+        # Wait a moment for the terminal to open
+        await asyncio.sleep(1)
 
         return {
             "success": True,
             "method": "tmux",
-            "message": "Minecraft server is starting in tmux session.",
+            "message": "Terminal window opened successfully.",
         }
 
     except Exception as e:
@@ -284,235 +273,153 @@ def is_minecraft_server_running():
         return False
 
 
-class GrandpaReplyModal(Modal, title="Reply to Message"):
-    reply = TextInput(
-        label="What do you want to say?",
-        style=TextStyle.paragraph,
-        placeholder="Type your reply to this message...",
-        max_length=2000,
-        required=True,
-    )
+@client.tree.command(name="grandpa", description="Chat with Professor William")
+async def grandpa(interaction: discord.Interaction, message: str):
+    """
+    Slash command to chat with William from any channel
 
-    def __init__(self, target_message: discord.Message):
-        super().__init__(title="Reply to Message")
-        self.target_message = target_message
+    Args:
+        interaction: The interaction object
+        message: The message to send to William
+    """
+    try:
+        username: str = str(interaction.user)
+        channel: str = str(interaction.channel)
 
-    async def on_submit(self, interaction: discord.Interaction) -> None:
+        # Defer the response if it might take longer than 3 seconds
+        await interaction.response.defer(ephemeral=False)
+
+        # Try to extract reply context if this slash command is used as a reply to a message
+        replied_to_message_content: str | None = None
+        replied_to_message_author: str | None = None
+
+        # Try to get reply context if the interaction is a reply to a message
+        # This is only possible if the interaction has a message reference (discord.py 2.3+)
+        # Otherwise, try to parse reply context from the message text (e.g., quoting)
         try:
-            await interaction.response.defer(ephemeral=False)
-
-            username: str = str(interaction.user)
-            channel: str = str(interaction.channel)
-            user_message: str = self.reply.value
-            replied_to_message_content: str = self.target_message.content
-            replied_to_message_author: str = str(self.target_message.author)
-
-            if user_message.strip().startswith("!ignore"):
-                logger.info(f"[{channel}] {username}: Message ignored via context menu ('!ignore' prefix).")
-                await interaction.followup.send("Message ignored due to '!ignore' prefix.")
-                return
-
-            gf_pattern = r"(g[\W_]*f|g[\W_]*i[\W_]*r[\W_]*l[\W_]*f[\W_]*r[\W_]*i[\W_]*e[\W_]*n[\W_]*d)"
-            prodeh_pattern = r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h"
-            if re.search(gf_pattern, user_message, re.IGNORECASE) and re.search(
-                prodeh_pattern, user_message, re.IGNORECASE
-            ):
-                await interaction.followup.send(
-                    "Sorry, your message cannot contain prohibited words 'gf'/'girlfriend' and 'prodeh'."
-                )
-                return
-
-            filler_pattern = r"^\s*(um{1,}|uh+|hmm+|hm+|huh+|ok(ay)?|lol+|lmao+|brb|idk|\?+|\.{2,})\s*$"
-            if re.match(filler_pattern, user_message, re.IGNORECASE):
-                logger.info(f"[{channel}] {username}: Context menu message ignored (filler).")
-                await interaction.followup.send("Message ignored due to filler/short content.")
-                return
-
-            logger.info(f"[{channel}] {username} (replying to {replied_to_message_author}): {user_message}")
-
-            user_context = get_user_context(interaction.user)
-
-            async with interaction.channel.typing():
-                response: str = get_response(
-                    user_message,
-                    username,
-                    replied_to_message_content,
-                    replied_to_message_author,
-                    user_id=user_context["user_id"],
-                    roles=user_context["roles"],
-                    display_name=user_context["display_name"],
-                )
-
-            combined = (
-                f"**{username}** (replying to **{replied_to_message_author}**): {user_message}\n\n"
-                f"**William:** {response}"
-            )
-            max_length = 2000
-            if len(combined) <= max_length:
-                await interaction.followup.send(combined)
-            else:
-                for i in range(0, len(combined), max_length):
-                    await interaction.followup.send(combined[i : i + max_length])
-
-            logger.info(f"Context menu reply sent to {username} in {interaction.channel}")
-
-        except discord.errors.Forbidden as e:
-            logger.error(f"Permission error in context menu reply: {e}")
-            await interaction.followup.send("I don't have permission to perform this action.")
+            # If the interaction was invoked as a reply to a message (e.g., right-click -> Apps -> grandpa)
+            if hasattr(interaction, "channel") and hasattr(interaction, "data"):
+                # Check for "message_reference" in interaction.data
+                # This is not standard for slash commands, but some clients may provide it
+                ref = getattr(interaction, "message", None)
+                if ref and getattr(ref, "reference", None):
+                    ref_msg_id = ref.reference.message_id
+                    if ref_msg_id:
+                        original_message = await interaction.channel.fetch_message(
+                            ref_msg_id
+                        )
+                        replied_to_message_content = original_message.content
+                        replied_to_message_author = str(original_message.author)
+                        logger.info(
+                            f"[{channel}] {username}: Replied to {replied_to_message_author}: {replied_to_message_content}"
+                        )
         except Exception as e:
-            logger.error(f"Error in context menu reply: {e}")
-            await interaction.followup.send(
-                "Oh my, I seem to have dropped my glasses! Could you try again, dearie?"
-            )
+            logger.error(f"Error fetching replied message for slash command: {e}")
 
-
-def setup_commands(tree: app_commands.CommandTree):
-    @tree.command(name="grandpa", description="Chat with Professor William")
-    async def grandpa(interaction: discord.Interaction, message: str):
-        """
-        Slash command to chat with William from any channel
-
-        Args:
-            interaction: The interaction object
-            message: The message to send to William
-        """
-        try:
-            username: str = str(interaction.user)
-            channel: str = str(interaction.channel)
-
-            # Defer the response if it might take longer than 3 seconds
-            await interaction.response.defer(ephemeral=False)
-
-            # Use the "Ask Grandpa" message context menu (right-click -> Apps) for reply-to-message
-            replied_to_message_content: str | None = None
-            replied_to_message_author: str | None = None
-
-            # If the message starts with "!ignore", do not send it to the LLM
-            if message.strip().startswith("!ignore"):
-                logger.info(
-                    f"[{channel}] {username}: Message ignored due to '!ignore' prefix."
-                )
-                await interaction.followup.send(
-                    "Message ignored due to '!ignore' prefix."
-                )
-                return
-
-            # Check if user_message contains both "gf" or "girlfriend" and "prodeh" (case-insensitive, fuzzy)
-            gf_pattern = r"(g[\W_]*f|g[\W_]*i[\W_]*r[\W_]*l[\W_]*f[\W_]*r[\W_]*i[\W_]*e[\W_]*n[\W_]*d)"
-            prodeh_pattern = r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h"
-            if re.search(gf_pattern, message, re.IGNORECASE) and re.search(
-                prodeh_pattern, message, re.IGNORECASE
-            ):
-                await interaction.followup.send(
-                    "Sorry, your message cannot contain prohibited words 'gf'/'girlfriend' and 'prodeh'."
-                )
-                return
-
-            # Detect "umm" and similar small filler messages and ignore them
-            # Examples: "umm", "uh", "hmm", "hm", "huh", "ok", "okay", "lol", "lmao", "brb", "idk", "?", "..."
-            filler_pattern = r"^\s*(um{1,}|uh+|hmm+|hm+|huh+|ok(ay)?|lol+|lmao+|brb|idk|\?+|\.{2,})\s*$"
-            if re.match(filler_pattern, message, re.IGNORECASE):
-                logger.info(
-                    f"[{channel}] {username}: Message ignored due to filler/short content ('{message.strip()}')."
-                )
-                await interaction.followup.send(
-                    "Message ignored due to filler/short content."
-                )
-                return
-
-            logger.info(f"[{channel}] {username}: {message}")
-
-            user_context = get_user_context(interaction.user)
-
-            # Get response with reply context (now possibly filled)
-            async with interaction.channel.typing():
-                response: str = get_response(
-                    message,
-                    username,
-                    replied_to_message_content,
-                    replied_to_message_author,
-                    user_id=user_context["user_id"],
-                    roles=user_context["roles"],
-                    display_name=user_context["display_name"],
-                )
-
-            # Send both the user's message and William's response in a single followup
-            combined = f"**{username}:** {message}\n\n**William:** {response}"
-            max_length = 2000
-            if len(combined) <= max_length:
-                await interaction.followup.send(combined)
-            else:
-                for i in range(0, len(combined), max_length):
-                    await interaction.followup.send(combined[i : i + max_length])
+        # If the message starts with "!ignore", do not send it to the LLM
+        if message.strip().startswith("!ignore"):
             logger.info(
-                f"Slash command response sent to {username} in {interaction.channel}"
+                f"[{channel}] {username}: Message ignored due to '!ignore' prefix."
             )
+            await interaction.followup.send("Message ignored due to '!ignore' prefix.")
+            return
 
-        except discord.errors.Forbidden as e:
-            logger.error(f"Permission error in grandpa command: {e}")
+        # Check if user_message contains both "gf" or "girlfriend" and "prodeh" (case-insensitive, fuzzy)
+        gf_pattern = r"(g[\W_]*f|g[\W_]*i[\W_]*r[\W_]*l[\W_]*f[\W_]*r[\W_]*i[\W_]*e[\W_]*n[\W_]*d)"
+        prodeh_pattern = r"p[\W_]*r[\W_]*o[\W_]*d[\W_]*e[\W_]*h"
+        if re.search(gf_pattern, message, re.IGNORECASE) and re.search(
+            prodeh_pattern, message, re.IGNORECASE
+        ):
             await interaction.followup.send(
-                "I don't have permission to perform this action."
-            )
-        except Exception as e:
-            logger.error(f"Error in grandpa command: {e}")
-            await interaction.followup.send(
-                "Oh my, I seem to have dropped my glasses! Could you try again, dearie?"
-            )
-
-    @tree.command(name="start", description="Start the Minecraft Server")
-    async def start(interaction: discord.Interaction):
-        """
-        Slash command to start the Minecraft Server
-
-        Args:
-            interaction: The interaction object
-        """
-        if interaction.channel_id != MinecraftServer_Channel:
-            await interaction.response.send_message(
-                "This command can only be used in the #game-chat channel.",
-                ephemeral=True,
+                "Sorry, your message cannot contain prohibited words 'gf'/'girlfriend' and 'prodeh'."
             )
             return
 
-        try:
-            await interaction.response.defer()
-
-            result = await start_minecraft_server()
-
-            if isinstance(result, dict) and result["success"]:
-                message = "🚀 **Minecraft server started successfully!**"
-                if "message" in result:
-                    message += f"\n{result['message']}"
-                await interaction.followup.send(message)
-                logger.info(f"Minecraft server started by {interaction.user}.")
-            else:
-                error_msg = "❌ **Error starting Minecraft server...**"
-                if isinstance(result, dict) and "error" in result:
-                    error_msg += f"\n{result['error']}"
-                    logger.error(
-                        f"Failed to start Minecraft server: {result.get('error')}"
-                    )
-                await interaction.followup.send(error_msg, ephemeral=True)
-                logger.error("Failed to start Minecraft server.")
-
-        except Exception as e:
-            logger.error(f"Error executing command: {str(e)}")
-            await interaction.followup.send(
-                "❌ **Error starting Minecraft server...**", ephemeral=True
+        # Detect "umm" and similar small filler messages and ignore them
+        # Examples: "umm", "uh", "hmm", "hm", "huh", "ok", "okay", "lol", "lmao", "brb", "idk", "?", "..."
+        filler_pattern = (
+            r"^\s*(um{1,}|uh+|hmm+|hm+|huh+|ok(ay)?|lol+|lmao+|brb|idk|\?+|\.{2,})\s*$"
+        )
+        if re.match(filler_pattern, message, re.IGNORECASE):
+            logger.info(
+                f"[{channel}] {username}: Message ignored due to filler/short content ('{message.strip()}')."
             )
+            await interaction.followup.send(
+                "Message ignored due to filler/short content."
+            )
+            return
 
-    @tree.context_menu(name="Ask Grandpa")
-    async def ask_grandpa(interaction: discord.Interaction, message: discord.Message):
-        modal = GrandpaReplyModal(message)
-        await interaction.response.send_modal(modal)
+        logger.info(f"[{channel}] {username}: {message}")
+
+        # Get response with reply context (now possibly filled)
+        response: str = get_response(
+            message, username, replied_to_message_content, replied_to_message_author
+        )
+
+        # Send the user's message first
+        await interaction.followup.send(f"**{username}:** {message}")
+
+        # Send William's response using chunked messaging
+        await send_chunked_message(interaction.channel, f"**William:** {response}")
+        logger.info(
+            f"Slash command response sent to {username} in {interaction.channel}"
+        )
+
+    except discord.errors.Forbidden as e:
+        logger.error(f"Permission error in grandpa command: {e}")
+        await interaction.followup.send(
+            "I don't have permission to perform this action."
+        )
+    except Exception as e:
+        logger.error(f"Error in grandpa command: {e}")
+        await interaction.followup.send(
+            "Oh my, I seem to have dropped my glasses! Could you try again, dearie?"
+        )
+
+
+@client.tree.command(name="start", description="Start the Minecraft Server")
+async def start(interaction: discord.Interaction):
+    """
+    Slash command to start the Minecraft Server
+
+    Args:
+        interaction: The interaction object
+    """
+    if interaction.channel_id != MinecraftServer_Channel:
+        await interaction.response.send_message(
+            "This command can only be used in the #game-chat channel.", ephemeral=True
+        )
+        return
+
+    try:
+        await interaction.response.defer()
+
+        result = await start_minecraft_server()
+
+        if isinstance(result, dict) and result["success"]:
+            message = "🚀 **Minecraft server started successfully!**"
+            if "message" in result:
+                message += f"\n{result['message']}"
+            await interaction.followup.send(message)
+            logger.info(f"Minecraft server started by {interaction.user}.")
+        else:
+            error_msg = "❌ **Error starting Minecraft server...**"
+            if isinstance(result, dict) and "error" in result:
+                error_msg += f"\n{result['error']}"
+                logger.error(f"Failed to start Minecraft server: {result.get('error')}")
+            await interaction.followup.send(error_msg, ephemeral=True)
+            logger.error("Failed to start Minecraft server.")
+
+    except Exception as e:
+        logger.error(f"Error executing command: {str(e)}")
+        await interaction.followup.send(
+            "❌ **Error starting Minecraft server...**", ephemeral=True
+        )
 
 
 @client.event
 async def on_ready() -> None:
     logger.info(f"Bot {client.user} is now running!")
-
-    # Set up commands
-    setup_commands(client.tree)
 
     # Sync slash commands
     try:
@@ -524,10 +431,10 @@ async def on_ready() -> None:
 
 @client.event
 async def on_message(message: Message) -> None:
-    msg_id = message.id
-    logger.info(f"on_message fired for msg_id={msg_id}, author={message.author}, content='{message.content[:50]}'")
+    if message.channel.id != PervertedOldMan_Channel:
+        return
+
     if message.author == client.user:
-        logger.info(f"on_message: ignoring own message {msg_id}")
         return
 
     username: str = str(message.author)
@@ -537,7 +444,6 @@ async def on_message(message: Message) -> None:
     replied_to_message_content: str | None = None
     replied_to_message_author: str | None = None
 
-    is_reply_to_bot = False
     if message.reference:
         try:
             original_message = await message.channel.fetch_message(
@@ -545,7 +451,6 @@ async def on_message(message: Message) -> None:
             )
             replied_to_message_content = original_message.content
             replied_to_message_author = str(original_message.author)
-            is_reply_to_bot = original_message.author == client.user
 
             logger.info(
                 f"[{channel}] {username}: Replied to {replied_to_message_author}: {replied_to_message_content}"
@@ -557,29 +462,6 @@ async def on_message(message: Message) -> None:
             )
         except Exception as e:
             logger.error(f"Error fetching replied message: {e}")
-
-    is_bot_mentioned = client.user.mentioned_in(message)
-
-    if not is_bot_mentioned and message.channel.id != PervertedOldMan_Channel and not is_reply_to_bot:
-        logger.info(f"on_message: ignoring msg {msg_id} — wrong channel and not reply to bot")
-        return
-
-    if is_bot_mentioned:
-        logger.info(
-            f"[{channel}] {username}: Bot mentioned in msg {msg_id}, bypassing channel filter."
-        )
-
-    # In PervertedOldMan_Channel, ignore replies to other users unless "grandpa" is in the message
-    if not is_bot_mentioned and (
-        message.channel.id == PervertedOldMan_Channel
-        and message.reference
-        and not is_reply_to_bot
-    ):
-        if "grandpa" not in user_message.lower():
-            logger.info(
-                f"[{channel}] {username}: Ignored reply to another user (no 'grandpa' keyword)."
-            )
-            return
 
     # If the message starts with "!ignore", do not send it to the LLM
     if user_message.strip().startswith("!ignore"):
@@ -617,6 +499,9 @@ async def on_message(message: Message) -> None:
         replied_to_message_content,
         replied_to_message_author,
         username,
+        user_id=message.author.id,
+        roles=[role.name for role in message.author.roles[1:]],
+        display_name=message.author.display_name,
     )
 
 

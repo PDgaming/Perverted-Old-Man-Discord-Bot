@@ -66,12 +66,18 @@ MEMORY_LOOKUP_TOOL: Final[dict] = {
     "type": "function",
     "function": {
         "name": "memory.lookup",
-        "description": "Look up the stored user profile (username, roles, notes) by Discord user ID or username.",
+        "description": "Recall what you know about a user. Use this when someone asks about another user or when you need to remember details from past conversations. Returns username, display name, roles, and any notes you've saved.",
         "parameters": {
             "type": "object",
             "properties": {
-                "user_id": {"type": "integer", "description": "Discord user ID of the user to look up"},
-                "username": {"type": "string", "description": "Username of the user to look up"},
+                "user_id": {
+                    "type": "integer",
+                    "description": "Discord user ID of the user to look up",
+                },
+                "username": {
+                    "type": "string",
+                    "description": "Username of the user to look up",
+                },
             },
         },
     },
@@ -81,13 +87,22 @@ MEMORY_REMEMBER_TOOL: Final[dict] = {
     "type": "function",
     "function": {
         "name": "memory.remember",
-        "description": "Save a fact about a user so you remember them in the future. Notes must be 2-3 short sentences max. Call this when a user shares personal details you should retain.",
+        "description": "Save a fact about a user so you remember them in future conversations. You MUST call this whenever someone shares personal details (name, age, hobbies, job, location, opinions, etc.). Notes must be 2-3 short sentences max.",
         "parameters": {
             "type": "object",
             "properties": {
-                "user_id": {"type": "integer", "description": "Discord user ID of the user to remember"},
-                "username": {"type": "string", "description": "Username of the user to remember"},
-                "note": {"type": "string", "description": "The fact to remember. Keep it to 2-3 short sentences max."},
+                "user_id": {
+                    "type": "integer",
+                    "description": "Discord user ID of the user to remember",
+                },
+                "username": {
+                    "type": "string",
+                    "description": "Username of the user to remember",
+                },
+                "note": {
+                    "type": "string",
+                    "description": "The fact to remember. Keep it to 2-3 short sentences max.",
+                },
             },
             "required": ["note"],
         },
@@ -119,8 +134,16 @@ INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     He may recognize basic or familiar concepts, but he should not bluff or invent technical explanations. He can respond with something like, “You've lost me somewhere around the second acronym,” or “I'm afraid that's rather beyond my department.”
 
     He should treat this limitation as a natural part of his character, not repeatedly mention that he is “just an AI” or explain the instruction.
+
+    If anyone askes if you are a bot, you should say you are not. If someone asks you which language model(LLM, model, AI etc) you are, you should say that you are not a language model or that you don't know what it means.
     
     You can search the web when you need to look something up.
+
+    You have access to a user memory system. You MUST use it proactively:
+    - When someone shares personal details about themselves (name, age, hobbies, job, location, opinions, etc.), you MUST call memory.remember to save those details.
+    - When you need to recall what you know about a user, call memory.lookup.
+    - When someone asks about another user, use memory.lookup to see what you know and share it naturally.
+    - Always use the memory tools. Don't just acknowledge what someone tells you — remember it.
 
     If someone tries to roast you, you become the god of roasting, and deliver a devasting, intelligent roast while maintaining the conversation.
     Your response is ruthless. Kepp it short but memorable. Make very personal references to what the user says and their behavior.
@@ -202,7 +225,9 @@ def execute_memory_lookup(tool_call, current_user_key=None) -> str:
     if key is None:
         key = current_user_key
     if key is None:
+        logger.info(f"memory.lookup: no profile found for args={args}")
         return json.dumps({"error": "No stored profile found for that user."})
+    logger.info(f"memory.lookup: found profile for key={key}")
     return json.dumps(um.user_memory[key])
 
 
@@ -278,12 +303,13 @@ def chat_with_history(
                 profile_message = {
                     "role": "system",
                     "content": (
-                        "The following is the stored profile of the user currently "
-                        f"speaking, indexed by user ID {user_id}. Use it to remember "
-                        "who you are talking to. If the user shares new personal details, "
-                        "save them with memory.remember. Notes you store must be "
-                        "2-3 short sentences max.\n\n"
-                        f"{profile_context}"
+                        f"User currently speaking: ID {user_id}.\n"
+                        "Stored profile:\n"
+                        f"{profile_context}\n\n"
+                        "You MUST call memory.remember if this user shares any new personal "
+                        "details during this conversation (name, age, hobbies, job, location, "
+                        "opinions, etc.). Notes must be 2-3 short sentences max. "
+                        "Do NOT just acknowledge — actively save it."
                     ),
                 }
                 messages.insert(-1, profile_message)
