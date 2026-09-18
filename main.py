@@ -254,15 +254,35 @@ async def start_with_terminal(script_path):
 
 def is_minecraft_server_running():
     """
-    Checks if the Minecraft server is running by checking the process list.
+    Checks if the Minecraft server is running by checking the process list
+    and the tmux session.
 
     Returns:
         bool: True if the server is running, False otherwise
     """
     try:
-        for proc in psutil.process_iter(["name"]):
+        # Check if the tmux session exists
+        try:
+            tmux_check = subprocess.run(
+                ["tmux", "has-session", "-t", "unitedblocks"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if tmux_check.returncode == 0:
+                logger.info("Minecraft server is running (tmux session found).")
+                return True
+        except (FileNotFoundError, OSError):
+            # tmux is not installed or not available; fall through to process check
+            pass
+
+        # Check process list by name and cmdline (script name appears in
+        # cmdline, not in the process name, e.g. "bash .../UnitedBlocks.sh")
+        for proc in psutil.process_iter(["name", "cmdline"]):
             try:
-                if "UnitedBlocks.sh".lower() in proc.info["name"].lower():
+                name = (proc.info.get("name") or "").lower()
+                cmdline_parts = proc.info.get("cmdline") or []
+                cmdline = " ".join(cmdline_parts).lower()
+                if "unitedblocks" in name or "unitedblocks" in cmdline:
                     logger.info("Minecraft server is running.")
                     return True
             except (psutil.NoSuchProcess, psutil.AccessDenied):
@@ -391,12 +411,29 @@ async def start(interaction: discord.Interaction):
         )
         return
 
+    if is_minecraft_server_running():
+        await interaction.response.send_message(
+            "✅ **Minecraft server is already running!**"
+        )
+        logger.info(
+            f"{interaction.user} tried to start the Minecraft server, but it is already running."
+        )
+        return
+
     try:
         await interaction.response.defer()
 
         result = await start_minecraft_server()
 
         if isinstance(result, dict) and result["success"]:
+            if result.get("method") == "already_running":
+                await interaction.followup.send(
+                    "✅ **Minecraft server is already running!**"
+                )
+                logger.info(
+                    f"Minecraft server start requested by {interaction.user}, but it was already running."
+                )
+                return
             message = "🚀 **Minecraft server started successfully!**"
             if "message" in result:
                 message += f"\n{result['message']}"
