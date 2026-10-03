@@ -22,8 +22,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
-PervertedOldMan_Channel: Final[int] = 1416359469654212658
-MinecraftServer_Channel: Final[int] = 1340436119673770075
+
+
+def _get_channel_id(name: str) -> int:
+    value = os.getenv(name)
+    if not value:
+        logger.error(f"{name} not found in environment variables")
+        sys.exit(1)
+    try:
+        return int(value)
+    except ValueError:
+        logger.error(f"{name} must be a valid Discord channel ID (integer)")
+        sys.exit(1)
+
+
+PervertedOldMan_Channel: Final[int] = _get_channel_id("PERVERTED_OLD_MAN_CHANNEL_ID")
+MinecraftServer_Channel: Final[int] = _get_channel_id("MINECRAFT_SERVER_CHANNEL_ID")
 
 intents: Intents = Intents.default()
 intents.message_content = True
