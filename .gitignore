@@ -6,3 +6,4 @@ chat_history.json
 user_memory.json
 invite.txt
 .venv/
+config.json
