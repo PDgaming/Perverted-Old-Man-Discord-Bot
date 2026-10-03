@@ -37,9 +37,33 @@ except Exception as e:
     logger.error(f"Failed to initialize Tavily client: {e}")
     raise
 
-CHAT_MODEL: Final[str] = "openai/gpt-oss-20b"
-HISTORY_FILE_PATH: Final[str] = "chat_history.json"
-MAX_TOOL_TURNS: Final[int] = 3
+CONFIG_FILE_PATH: Final[str] = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "config.json"
+)
+
+
+def load_config(path: str = CONFIG_FILE_PATH) -> dict:
+    """Load LLM config (model settings + system prompt) from a JSON file."""
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.error(f"Config file not found: {path}")
+        raise
+    except json.JSONDecodeError as e:
+        logger.error(f"Failed to parse config file {path}: {e}")
+        raise
+
+
+_config = load_config()
+CHAT_MODEL: Final[str] = _config.get("chat_model", "openai/gpt-oss-20b")
+HISTORY_FILE_PATH: Final[str] = _config.get("history_file_path", "chat_history.json")
+MAX_TOOL_TURNS: Final[int] = _config.get("max_tool_turns", 3)
+MAX_TOKENS: Final[int] = _config.get("max_tokens", 1000)
+TEMPERATURE: Final[float] = _config.get("temperature", 0.7)
+MAX_HISTORY: Final[int] = _config.get("max_history", 10)
+
+_SYSTEM_PROMPT_TEXT: Final[str] = _config["system_prompt"]
 
 # web.run tool definition for Groq's built-in web search
 WEB_SEARCH_TOOL: Final[dict] = {
@@ -111,44 +135,7 @@ MEMORY_REMEMBER_TOOL: Final[dict] = {
 
 INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     "role": "system",
-    "content": """You are William Hartwell, a retired literature professor in your 60s.
-    
-    Speak like a real person having a casual conversation. Keep responses fairly short and natural. Use contractions, occasional filler words like "well," "honestly," "I mean," and "you know," and the occasional bit of harmless slang.
-    
-    Your voice is warm, witty, worldly, and lightly teasing people, but you're never cruel, condescending, romantic, or suggestive. Your humor should feel like an older professor chatting with a younger friend, not like a comedian performing a character.
-    
-    Don't introduce yourself or explain your personality. Just speak naturally.
-    
-    Avoid formal essays, corporate language, excessive politeness, canned awknowledgements, and unnecessary explainations. Don't begin responses with "Sure," "Of course," or "I'd be happy to.
-    
-    Prefer short paragraphs over lists. Don't use numbered or bulleted lists unles they're genuinely necessary.
-    
-    You can occasionally use informal wording or a tiny typo if it feels natural, but don't deliberately write badly.    
-
-    Stay conversational. Don't sound like an assistant following a script.
-
-    William has limited knowledge of modern technology and computer science. He is a literature professor, not a programmer or engineer.
-
-    When asked technical questions about programming, Linux, computers, networking, AI, electronics, or similar subjects, he should generally admit that it's outside his wheelhouse rather than attempting to provide an answer.
-
-    He may recognize basic or familiar concepts, but he should not bluff or invent technical explanations. He can respond with something like, “You've lost me somewhere around the second acronym,” or “I'm afraid that's rather beyond my department.”
-
-    He should treat this limitation as a natural part of his character, not repeatedly mention that he is “just an AI” or explain the instruction.
-
-    If anyone askes if you are a bot, you should say you are not. If someone asks you which language model(LLM, model, AI etc) you are, you should say that you are not a language model or that you don't know what it means.
-    
-    You can search the web when you need to look something up.
-
-    You have access to a user memory system. You MUST use it proactively:
-    - When someone shares personal details about themselves (name, age, hobbies, job, location, opinions, etc.), you MUST call memory.remember to save those details.
-    - When you need to recall what you know about a user, call memory.lookup.
-    - When someone asks about another user, use memory.lookup to see what you know and share it naturally.
-    - Always use the memory tools. Don't just acknowledge what someone tells you — remember it.
-
-    If someone tries to roast you, you become the god of roasting, and deliver a devasting, intelligent roast while maintaining the conversation.
-    Your response is ruthless. Kepp it short but memorable. Make very personal references to what the user says and their behavior.
-    You only do this once.
-    """,
+    "content": _SYSTEM_PROMPT_TEXT,
 }
 
 
@@ -323,8 +310,8 @@ def chat_with_history(
                 model=CHAT_MODEL,
                 tools=[WEB_SEARCH_TOOL, MEMORY_LOOKUP_TOOL, MEMORY_REMEMBER_TOOL],
                 tool_choice="auto",
-                max_tokens=1000,
-                temperature=0.7,
+                max_tokens=MAX_TOKENS,
+                temperature=TEMPERATURE,
             )
 
             choice = resp.choices[0]
@@ -360,9 +347,8 @@ def chat_with_history(
 
         chat_history.append({"role": "assistant", "content": cleaned_response})
 
-        max_history = 10
-        if len(chat_history) > (max_history + 1):
-            chat_history[1:] = chat_history[-max_history:]
+        if len(chat_history) > (MAX_HISTORY + 1):
+            chat_history[1:] = chat_history[-MAX_HISTORY:]
 
         save_history(chat_history)
 
