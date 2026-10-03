@@ -28,3 +28,7 @@ Short term chat lives in `chat_history.json`. Long term facts about people live 
 ## Quick pointer
 
 This README is only the overview. Setup, config, and internals are in the docs above. Start with the Discord bot doc if you are trying to run this yourself, since that is where the intents live.
+
+## License
+
+Free for non-commercial use. No commercial use, no use for profit, and no AI training. Public use must credit this repo. See [LICENSE](LICENSE).
