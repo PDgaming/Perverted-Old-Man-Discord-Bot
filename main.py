@@ -8,6 +8,7 @@ from discord.ext import commands
 from responses import get_response
 import sys
 import re
+import json
 import subprocess
 import asyncio
 import shlex
@@ -38,6 +39,27 @@ def _get_channel_id(name: str) -> int:
 
 PervertedOldMan_Channel: Final[int] = _get_channel_id("PERVERTED_OLD_MAN_CHANNEL_ID")
 MinecraftServer_Channel: Final[int] = _get_channel_id("MINECRAFT_SERVER_CHANNEL_ID")
+
+CONFIG_FILE_PATH: Final[str] = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "config.json"
+)
+
+
+def _load_minecraft_config() -> dict:
+    with open(CONFIG_FILE_PATH, "r") as f:
+        return json.load(f)["minecraft"]
+
+
+_MINECRAFT_CONFIG = _load_minecraft_config()
+
+MC_SCRIPT_PATH: Final[str] = _MINECRAFT_CONFIG["script_path"]
+MC_WORKING_DIR: Final[str] = _MINECRAFT_CONFIG["working_dir"]
+MC_SCRIPT_NAME: Final[str] = _MINECRAFT_CONFIG["script_name"]
+MC_TMUX_SESSION: Final[str] = _MINECRAFT_CONFIG["tmux_session"]
+MC_PROCESS_MATCH: Final[str] = _MINECRAFT_CONFIG["process_match"].lower()
+MC_TUNNEL_COMMAND: Final[str] = _MINECRAFT_CONFIG["tunnel_command"]
+MC_TERMINAL_EMULATOR: Final[str] = _MINECRAFT_CONFIG["terminal_emulator"]
+MC_TERMINAL_ARGS: Final[list] = _MINECRAFT_CONFIG["terminal_args"]
 
 intents: Intents = Intents.default()
 intents.message_content = True
@@ -137,7 +159,7 @@ async def start_minecraft_server():
     Returns:
         dict: Status information including success, method used, and any errors
     """
-    script_path = "/mnt/Software/UnitedBlocks/UnitedBlocks.sh"
+    script_path = MC_SCRIPT_PATH
 
     try:
         if not os.path.exists(script_path):
@@ -187,14 +209,13 @@ async def start_with_terminal(script_path):
     Starts the Minecraft server in a new terminal window
     """
     try:
-        # Use gnome-terminal with proper command structure
-        # Start playit in background, then run start.sh in foreground
+        # Start tunnel in background, then run start script in foreground
         process = await asyncio.create_subprocess_exec(
             "tmux",
             "new-session",
             "-d",
             "-s",
-            "unitedblocks",
+            MC_TMUX_SESSION,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
@@ -206,32 +227,32 @@ async def start_with_terminal(script_path):
             "split-window",
             "-h",
             "-t",
-            "unitedblocks",
+            MC_TMUX_SESSION,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
         await process.wait()
 
-        # Run start.sh in the left pane (pane 0)
+        # Run start script in the left pane (pane 0)
         process = await asyncio.create_subprocess_exec(
             "tmux",
             "send-keys",
             "-t",
-            "unitedblocks:0.0",
-            "cd /mnt/Software/UnitedBlocks && ./UnitedBlocks.sh",
+            f"{MC_TMUX_SESSION}:0.0",
+            f"cd {shlex.quote(MC_WORKING_DIR)} && ./{MC_SCRIPT_NAME}",
             "C-m",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
         await process.wait()
 
-        # Run playit in the right pane (pane 1)
+        # Run tunnel in the right pane (pane 1)
         process = await asyncio.create_subprocess_exec(
             "tmux",
             "send-keys",
             "-t",
-            "unitedblocks:0.1",
-            "playit",
+            f"{MC_TMUX_SESSION}:0.1",
+            MC_TUNNEL_COMMAND,
             "C-m",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -240,11 +261,9 @@ async def start_with_terminal(script_path):
 
         # Attach to the tmux session in a new terminal window
         process = await asyncio.create_subprocess_exec(
-            "konsole",
-            "--separate",
-            "--hide-menubar",
-            "-e",
-            "tmux attach-session -t unitedblocks",
+            MC_TERMINAL_EMULATOR,
+            *MC_TERMINAL_ARGS,
+            f"tmux attach-session -t {MC_TMUX_SESSION}",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
@@ -278,7 +297,7 @@ def is_minecraft_server_running():
         # Check if the tmux session exists
         try:
             tmux_check = subprocess.run(
-                ["tmux", "has-session", "-t", "unitedblocks"],
+                ["tmux", "has-session", "-t", MC_TMUX_SESSION],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
@@ -290,13 +309,13 @@ def is_minecraft_server_running():
             pass
 
         # Check process list by name and cmdline (script name appears in
-        # cmdline, not in the process name, e.g. "bash .../UnitedBlocks.sh")
+        # cmdline, not in the process name, e.g. "bash .../<script>.sh")
         for proc in psutil.process_iter(["name", "cmdline"]):
             try:
                 name = (proc.info.get("name") or "").lower()
                 cmdline_parts = proc.info.get("cmdline") or []
                 cmdline = " ".join(cmdline_parts).lower()
-                if "unitedblocks" in name or "unitedblocks" in cmdline:
+                if MC_PROCESS_MATCH in name or MC_PROCESS_MATCH in cmdline:
                     logger.info("Minecraft server is running.")
                     return True
             except (psutil.NoSuchProcess, psutil.AccessDenied):
