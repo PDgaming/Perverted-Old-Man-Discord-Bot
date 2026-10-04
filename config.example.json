@@ -21,7 +21,13 @@
     ]
   },
   "allowed_fetch_domains": [
-    "en.wikipedia.org"
+    "wikipedia.org",
+    "minecraft.wiki",
+    "gutenberg.org",
+    "poetryfoundation.org",
+    "bbc.com",
+    "bbc.co.uk",
+    "apnews.com"
   ],
   "fetch_blocked_message": "Sorry, I can't open links from that site.",
   "max_fetch_chars": 4000
