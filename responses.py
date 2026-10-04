@@ -1,6 +1,8 @@
 from typing import Final, List, Dict, Optional
 import os
 import logging
+import re
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from groq import Groq
 from tavily import TavilyClient
@@ -62,6 +64,15 @@ MAX_TOOL_TURNS: Final[int] = _config.get("max_tool_turns", 3)
 MAX_TOKENS: Final[int] = _config.get("max_tokens", 1000)
 TEMPERATURE: Final[float] = _config.get("temperature", 0.7)
 MAX_HISTORY: Final[int] = _config.get("max_history", 10)
+ALLOWED_FETCH_DOMAINS: Final[set] = {
+    d.lower().strip().rstrip(".") for d in _config.get("allowed_fetch_domains", [])
+}
+FETCH_BLOCKED_MESSAGE: Final[str] = _config.get(
+    "fetch_blocked_message", "Sorry, I can't open links from that site."
+)
+MAX_FETCH_CHARS: Final[int] = _config.get("max_fetch_chars", 4000)
+
+URL_RE = re.compile(r"https?://[^\s<>\"']+")
 
 _SYSTEM_PROMPT_TEXT: Final[str] = _config["system_prompt"]
 
@@ -82,6 +93,29 @@ WEB_SEARCH_TOOL: Final[dict] = {
                 "source": {"type": "string", "enum": ["web", "news"]},
             },
             "required": ["query"],
+        },
+    },
+}
+
+# web.fetch tool definition: fetch full content of a user-pasted URL via Tavily Extract
+WEB_FETCH_TOOL: Final[dict] = {
+    "type": "function",
+    "function": {
+        "name": "web.fetch",
+        "description": "Fetch full content of a specific URL the user pasted. Use when user_message contains an http/https link. Only works for allowed domains, otherwise blocked.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "Full http/https URL to fetch",
+                },
+                "query": {
+                    "type": "string",
+                    "description": "Optional focus topic for reranking",
+                },
+            },
+            "required": ["url"],
         },
     },
 }
@@ -182,8 +216,6 @@ chat_history: ChatHistory = load_history()
 
 def clean_response(response: str) -> str:
     """Clean the response by removing think tags, em/en dashes, and extra whitespace."""
-    import re
-
     cleaned = response.replace("<think>", "").replace("</think>", "").strip()
     # Normalize em/en dashes to plain ASCII so replies don't contain them.
     # Em dash (U+2014) acts as a clause break -> comma; en dash (U+2013)
@@ -212,6 +244,63 @@ def execute_web_run(tool_call) -> str:
     logger.info(f"web.run search: query='{query}' topn={topn}")
     result = tavily_client.search(query=query, max_results=topn)
     return json.dumps(result)
+
+
+def is_fetch_domain_allowed(url: str) -> bool:
+    """Check if a URL's domain is in the fetch allowlist (base domain + subdomains)."""
+    try:
+        parsed = urlparse(url)
+        if parsed.scheme not in ("http", "https"):
+            return False
+        host = (parsed.hostname or "").lower().rstrip(".")
+        if not host:
+            return False
+        for allowed in ALLOWED_FETCH_DOMAINS:
+            if not allowed:
+                continue
+            if host == allowed or host.endswith("." + allowed):
+                return True
+        return False
+    except Exception:
+        return False
+
+
+def execute_web_fetch(tool_call) -> str:
+    """Execute a web.fetch tool call using Tavily Extract, truncated to MAX_FETCH_CHARS."""
+    try:
+        args = json.loads(tool_call.function.arguments)
+    except (json.JSONDecodeError, AttributeError) as e:
+        return json.dumps({"error": f"Invalid tool arguments: {e}"})
+    url = (args.get("url", "") or "").strip()
+    query = args.get("query")
+    if not url:
+        return json.dumps({"error": "No URL provided."})
+    if not is_fetch_domain_allowed(url):
+        logger.warning(f"web.fetch blocked: {url}")
+        return json.dumps({"error": "blocked", "message": FETCH_BLOCKED_MESSAGE})
+    logger.info(f"web.fetch extract: url='{url}'")
+    try:
+        kwargs = {
+            "urls": url,
+            "extract_depth": "basic",
+            "format": "markdown",
+            "timeout": 30,
+        }
+        if query:
+            kwargs["query"] = query
+        result = tavily_client.extract(**kwargs)
+    except Exception as e:
+        logger.error(f"web.fetch extract failed for {url}: {e}")
+        return json.dumps({"error": f"Extract failed: {e}"})
+    results = (result or {}).get("results", [])
+    if not results:
+        failed = (result or {}).get("failed_results", [])
+        detail = failed[0].get("error", "Extraction returned no content.") if failed else "Extraction returned no content."
+        return json.dumps({"error": detail, "url": url})
+    raw = results[0].get("raw_content", "") or ""
+    if len(raw) > MAX_FETCH_CHARS:
+        raw = raw[:MAX_FETCH_CHARS] + "\n\n[truncated]"
+    return json.dumps({"url": url, "content": raw})
 
 
 def execute_memory_lookup(tool_call, current_user_key=None) -> str:
@@ -248,6 +337,8 @@ def execute_tool(tool_call, current_user_key=None) -> str:
     name = tool_call.function.name
     if name == "web.run":
         return execute_web_run(tool_call)
+    if name == "web.fetch":
+        return execute_web_fetch(tool_call)
     if name == "memory.lookup":
         return execute_memory_lookup(tool_call, current_user_key)
     if name == "memory.remember":
@@ -281,6 +372,21 @@ def chat_with_history(
             )
         else:
             full_user_message = f"{username}>{user_message}"
+
+        # Pre-scan: blocked fetch domains bypass the LLM with a fixed reply.
+        # Saves a Groq turn and Tavily credit, keeps wording predictable.
+        for url in URL_RE.findall(user_message):
+            url = url.rstrip(".,;:!?)")
+            if not is_fetch_domain_allowed(url):
+                logger.warning(f"fetch blocked: {url} from {username}")
+                chat_history.append({"role": "user", "content": full_user_message})
+                chat_history.append(
+                    {"role": "assistant", "content": FETCH_BLOCKED_MESSAGE}
+                )
+                if len(chat_history) > (MAX_HISTORY + 1):
+                    chat_history[1:] = chat_history[-MAX_HISTORY:]
+                save_history(chat_history)
+                return FETCH_BLOCKED_MESSAGE
 
         chat_history.append({"role": "user", "content": full_user_message})
 
@@ -317,18 +423,18 @@ def chat_with_history(
             resp = groq_client.chat.completions.create(
                 messages=messages,
                 model=CHAT_MODEL,
-                tools=[WEB_SEARCH_TOOL, MEMORY_LOOKUP_TOOL, MEMORY_REMEMBER_TOOL],
+                tools=[
+                    WEB_SEARCH_TOOL,
+                    WEB_FETCH_TOOL,
+                    MEMORY_LOOKUP_TOOL,
+                    MEMORY_REMEMBER_TOOL,
+                ],
                 tool_choice="auto",
                 max_tokens=MAX_TOKENS,
                 temperature=TEMPERATURE,
             )
 
             choice = resp.choices[0]
-
-            if choice.message.content:
-                response_text = choice.message.content
-                logger.info(f"Got text response on turn {turn + 1}")
-                break
 
             if choice.message.tool_calls:
                 for tc in choice.message.tool_calls:
@@ -345,6 +451,11 @@ def chat_with_history(
                         }
                     )
                 continue
+
+            if choice.message.content:
+                response_text = choice.message.content
+                logger.info(f"Got text response on turn {turn + 1}")
+                break
 
             # Neither content nor tool_calls — unexpected
             raise ValueError("Model returned neither content nor tool calls")
