@@ -526,6 +526,15 @@ async def on_message(message: Message) -> None:
             original_message = await message.channel.fetch_message(
                 message.reference.message_id
             )
+            # Skip replies to other users to avoid invoking the model on
+            # user-to-user conversations. Only replies to the bot itself
+            # fall through to the model.
+            if original_message.author != client.user:
+                logger.info(
+                    f"[{channel}] {username}: Ignored reply to {original_message.author}."
+                )
+                return
+
             replied_to_message_content = original_message.content
             replied_to_message_author = str(original_message.author)
 
@@ -537,8 +546,10 @@ async def on_message(message: Message) -> None:
             logger.warning(
                 f"[{channel}] {username} replied to a message, but the original was not found."
             )
+            return
         except Exception as e:
             logger.error(f"Error fetching replied message: {e}")
+            return
 
     # If the message starts with "!ignore", do not send it to the LLM
     if user_message.strip().startswith("!ignore"):
