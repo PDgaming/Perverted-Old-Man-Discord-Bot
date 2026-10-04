@@ -80,13 +80,20 @@ async def send_chunked_message(channel, response: str) -> None:
     """
     import re
 
-    # Split on '?' as sentence boundaries, keeping the delimiter
+    # Normalize em/en dashes to plain ASCII so replies don't contain them.
+    # Em dash (U+2014) acts as a clause break -> comma; en dash (U+2013)
+    # acts as a join/range -> hyphen; non-breaking hyphen (U+2011) -> hyphen.
+    response = re.sub(r"\s*—\s*", ", ", response)
+    response = re.sub(r"\s*–\s*", "-", response)
+    response = response.replace("‑", "-")
+
+    # Split on '.' '?' '\n' as sentence boundaries, keeping the delimiter
     # This will split on either '.' or '?' followed by optional whitespace
     parts = re.split(r"([.?\n])", response)
     sentences = []
     current = ""
     for part in parts:
-        if part in ["?", "\n"]:
+        if part in [".", "?", "\n"]:
             current += part
             if current.strip():
                 sentences.append(current.strip())

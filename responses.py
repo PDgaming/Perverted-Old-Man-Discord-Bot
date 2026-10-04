@@ -181,8 +181,17 @@ chat_history: ChatHistory = load_history()
 
 
 def clean_response(response: str) -> str:
-    """Clean the response by removing think tags and extra whitespace."""
-    return response.replace("<think>", "").replace("</think>", "").strip()
+    """Clean the response by removing think tags, em/en dashes, and extra whitespace."""
+    import re
+
+    cleaned = response.replace("<think>", "").replace("</think>", "").strip()
+    # Normalize em/en dashes to plain ASCII so replies don't contain them.
+    # Em dash (U+2014) acts as a clause break -> comma; en dash (U+2013)
+    # acts as a join/range -> hyphen; non-breaking hyphen (U+2011) -> hyphen.
+    cleaned = re.sub(r"\s*—\s*", ", ", cleaned)
+    cleaned = re.sub(r"\s*–\s*", "-", cleaned)
+    cleaned = cleaned.replace("‑", "-")
+    return cleaned.strip()
 
 
 def extract_response_content(response: str) -> str:
