@@ -1,19 +1,31 @@
-from typing import Final, List, Dict, Optional
+from typing import Final, List, Dict, Optional, Any
 import os
 import logging
 import re
+from datetime import datetime
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from groq import Groq
 from tavily import TavilyClient
 import json
-import user_memory as um
+from src import user_memory as um
+from src import router as tev_router
+from src.paths import (
+    CHAT_HISTORY_PATH,
+    CONFIG_DIR,
+    CONFIG_FILE_PATH,
+    PROJECT_ROOT,
+    ensure_runtime_dirs,
+    resolve_root_relative,
+)
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 # Load environment variables
-load_dotenv()
+ensure_runtime_dirs()
+load_dotenv(os.path.join(CONFIG_DIR, ".env"))
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
 # Initialize Groq client
 TOKEN: Final[str] = os.getenv("GROQ_API_KEY")
@@ -39,13 +51,8 @@ except Exception as e:
     logger.error(f"Failed to initialize Tavily client: {e}")
     raise
 
-CONFIG_FILE_PATH: Final[str] = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "config.json"
-)
-
-
 def load_config(path: str = CONFIG_FILE_PATH) -> dict:
-    """Load LLM config (model settings + system prompt) from a JSON file."""
+    """Load LLM config (model settings + prompt file reference) from a JSON file."""
     try:
         with open(path, "r") as f:
             return json.load(f)
@@ -57,9 +64,36 @@ def load_config(path: str = CONFIG_FILE_PATH) -> dict:
         raise
 
 
+def load_system_prompt(config: dict, config_path: str = CONFIG_FILE_PATH) -> str:
+    """Load the system prompt from its .md file, falling back to inline config."""
+    prompt_file = config.get("system_prompt_file")
+    if prompt_file:
+        if not os.path.isabs(prompt_file):
+            # Relative paths resolve against the project root, so the config
+            # file can live in config/ while referencing prompts/ or data/.
+            prompt_file = resolve_root_relative(prompt_file)
+        try:
+            with open(prompt_file, "r") as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            logger.error(f"System prompt file not found: {prompt_file}")
+            raise
+        except OSError as e:
+            logger.error(f"Failed to read system prompt file {prompt_file}: {e}")
+            raise
+    # Backwards compat: older configs embedded the prompt directly.
+    if "system_prompt" in config:
+        return config["system_prompt"]
+    raise ValueError(
+        "No system prompt configured: set 'system_prompt_file' in config.json"
+    )
+
+
 _config = load_config()
 CHAT_MODEL: Final[str] = _config.get("chat_model", "openai/gpt-oss-20b")
-HISTORY_FILE_PATH: Final[str] = _config.get("history_file_path", "chat_history.json")
+HISTORY_FILE_PATH: Final[str] = resolve_root_relative(
+    _config.get("history_file_path", CHAT_HISTORY_PATH)
+)
 MAX_TOOL_TURNS: Final[int] = _config.get("max_tool_turns", 3)
 MAX_TOKENS: Final[int] = _config.get("max_tokens", 1000)
 TEMPERATURE: Final[float] = _config.get("temperature", 0.7)
@@ -71,17 +105,20 @@ FETCH_BLOCKED_MESSAGE: Final[str] = _config.get(
     "fetch_blocked_message", "Sorry, I can't open links from that site."
 )
 MAX_FETCH_CHARS: Final[int] = _config.get("max_fetch_chars", 4000)
+ROUTER_CFG: Final[tev_router.RouterConfig] = tev_router.RouterConfig.from_dict(_config)
+
+TOOL_DEFS: Final[dict] = {}
 
 URL_RE = re.compile(r"https?://[^\s<>\"']+")
 
-_SYSTEM_PROMPT_TEXT: Final[str] = _config["system_prompt"]
+_SYSTEM_PROMPT_TEXT: Final[str] = load_system_prompt(_config)
 
 # web.run tool definition for Groq's built-in web search
 WEB_SEARCH_TOOL: Final[dict] = {
     "type": "function",
     "function": {
         "name": "web.run",
-        "description": "Search the web for current information",
+        "description": "Search the web for current or technical information. Use this when the user explicitly asks about programming, computers, AI, or other technical topics you don't know from memory, then summarize what you find.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -124,7 +161,7 @@ MEMORY_LOOKUP_TOOL: Final[dict] = {
     "type": "function",
     "function": {
         "name": "memory.lookup",
-        "description": "Recall what you know about a user. Use this when someone asks about another user or when you need to remember details from past conversations. Returns username, display name, roles, and any notes you've saved.",
+        "description": "Recall what you know about a user. Use this when someone asks about another user or when you need to remember details from past conversations. Copy the username exactly as the user wrote it, never correct its spelling. Returns username, display name, roles, and any notes you've saved.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -172,6 +209,54 @@ INITIAL_SYSTEM_PROMPT: Dict[str, str] = {
     "content": _SYSTEM_PROMPT_TEXT,
 }
 
+TOOL_DEFS.update(
+    {
+        "web.run": WEB_SEARCH_TOOL,
+        "web.fetch": WEB_FETCH_TOOL,
+        "memory.lookup": MEMORY_LOOKUP_TOOL,
+        "memory.remember": MEMORY_REMEMBER_TOOL,
+    }
+)
+
+# Legacy refusal phrases from the old blanket-deflection prompt. They poison
+# context: once a few land in history the model parrots them every turn.
+# load_history() and chat_with_history() strip them so an old log can't
+# lock the bot in a repeat loop after the prompt was fixed.
+POISON_PATTERNS: Final[tuple] = (
+    "beyond my department",
+    "lost me somewhere around the second acronym",
+)
+
+
+def sanitize_history(history: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Drop poisoned legacy refusals and collapse repeat assistant replies."""
+    cleaned: List[Dict[str, str]] = []
+    for msg in history:
+        if msg.get("role") == "system" and cleaned:
+            # Keep only the leading system prompt; profile injects are
+            # ephemeral and must not accumulate in saved history.
+            continue
+        if msg.get("role") == "assistant":
+            text = (msg.get("content") or "").lower()
+            if any(p in text for p in POISON_PATTERNS):
+                logger.info("sanitize_history: dropped poisoned refusal")
+                continue
+            if cleaned and cleaned[-1].get("role") == "assistant":
+                if cleaned[-1].get("content", "").strip().lower() == (
+                    msg.get("content") or ""
+                ).strip().lower():
+                    logger.info("sanitize_history: dropped duplicate reply")
+                    continue
+        cleaned.append(msg)
+    if not cleaned or cleaned[0].get("role") != "system":
+        cleaned = [INITIAL_SYSTEM_PROMPT] + [
+            m for m in cleaned if m.get("role") != "system"
+        ]
+    else:
+        if cleaned[0] != INITIAL_SYSTEM_PROMPT:
+            cleaned[0] = INITIAL_SYSTEM_PROMPT
+    return cleaned
+
 
 def save_history(history: List[Dict[str, str]]) -> None:
     """Saves the chat history to a JSON file, always including the system prompt as the first message."""
@@ -195,11 +280,7 @@ def load_history() -> List[Dict[str, str]]:
             with open(HISTORY_FILE_PATH, "r") as f:
                 history = json.load(f)
             logger.info("Chat history loaded successfully.")
-            if not history or history[0].get("role") != "system":
-                history = [INITIAL_SYSTEM_PROMPT] + history
-            else:
-                if history[0] != INITIAL_SYSTEM_PROMPT:
-                    history[0] = INITIAL_SYSTEM_PROMPT
+            history = sanitize_history(history)
             return history
         except (IOError, json.JSONDecodeError) as e:
             logger.error(
@@ -304,11 +385,29 @@ def execute_web_fetch(tool_call) -> str:
 
 
 def execute_memory_lookup(tool_call, current_user_key=None) -> str:
-    """Execute a memory.lookup tool call."""
+    """Execute a memory.lookup tool call.
+
+    Falls back to the current speaker only when no user was specified at all.
+    A named user that isn't found is a miss, never someone else's profile.
+    """
     args = json.loads(tool_call.function.arguments)
-    key = um.find_user(args.get("user_id"), args.get("username"))
+    asked_id = args.get("user_id")
+    asked_name = args.get("username")
+    key = um.find_user(asked_id, asked_name)
     if key is None:
-        key = current_user_key
+        if asked_id is None and not asked_name:
+            key = current_user_key
+        else:
+            suggestion = um.suggest_user(asked_name)
+            logger.info(f"memory.lookup: no profile found for args={args}")
+            error: Dict[str, str] = {"error": "No stored profile found for that user."}
+            if suggestion:
+                error["did_you_mean"] = (
+                    f"No match, but '{suggestion}' looks similar. "
+                    f"Call memory.lookup again with username '{suggestion}' "
+                    "copied exactly before giving up."
+                )
+            return json.dumps(error)
     if key is None:
         logger.info(f"memory.lookup: no profile found for args={args}")
         return json.dumps({"error": "No stored profile found for that user."})
@@ -359,10 +458,9 @@ def chat_with_history(
         raise ValueError("Empty message")
 
     try:
-        if not chat_history or chat_history[0].get("role") != "system":
-            chat_history.insert(0, INITIAL_SYSTEM_PROMPT)
-        elif chat_history[0] != INITIAL_SYSTEM_PROMPT:
-            chat_history[0] = INITIAL_SYSTEM_PROMPT
+        # Sanitize in-memory history every turn: a long-running bot holds
+        # poisoned turns in RAM even after chat_history.json is cleaned.
+        chat_history[:] = sanitize_history(chat_history)
 
         if replied_to_message_content and replied_to_message_author:
             full_user_message = (
@@ -393,6 +491,22 @@ def chat_with_history(
         # Build a mutable messages list from chat history for the tool loop
         messages = list(chat_history)
 
+        # Ephemeral clock: the model has no tools for date/time, so inject it.
+        # Never saved to history. Kills "what time is it" web searches.
+        now = datetime.now().astimezone()
+        messages.insert(
+            -1,
+            {
+                "role": "system",
+                "content": (
+                    "Current local date and time: "
+                    + now.strftime("%A, %B %d, %Y, %H:%M")
+                    + ". Use this to answer time or date questions directly. "
+                    "Never call a tool just to find the current time or date."
+                ),
+            },
+        )
+
         # Inject the current user's stored profile into this call only.
         # It is never appended to chat_history, so it doesn't bloat the saved context.
         current_user_key: Optional[str] = None
@@ -417,32 +531,100 @@ def chat_with_history(
                 messages.insert(-1, profile_message)
 
         response_text: str | None = None
+        remember_called = False
+        called_tools: set = set()
+
+        # Tev System-1 pre-pass: decide which tools the LLM must call.
+        # Blocked-domain pre-scan above already ran, so Tev never sees those.
+        # Any router failure falls back to all-tools auto (today's behavior).
+        try:
+            route = tev_router.route_message(full_user_message, ROUTER_CFG)
+        except tev_router.RouterError:
+            route = tev_router.RouteDecision(
+                forced=[], fallback=True, remember_optional=True, reason="router error"
+            )
+
+        if route.fallback:
+            turn_tools = [
+                WEB_SEARCH_TOOL,
+                WEB_FETCH_TOOL,
+                MEMORY_LOOKUP_TOOL,
+                MEMORY_REMEMBER_TOOL,
+            ]
+            turn_choice: Any = "auto"
+        elif not route.forced:
+            # Tev says plain chat: advisory only. All tools stay available
+            # with auto, since hard-blocking tools 400s when the model calls
+            # anyway, and the model has final say.
+            turn_tools = [
+                WEB_SEARCH_TOOL,
+                WEB_FETCH_TOOL,
+                MEMORY_LOOKUP_TOOL,
+                MEMORY_REMEMBER_TOOL,
+            ]
+            turn_choice = "auto"
+            messages.append(
+                {
+                    "role": "system",
+                    "content": (
+                        f"Router suggestion ({route.reason}): this looks like "
+                        "plain chat, so answer directly if you can. Only call "
+                        "a tool if you genuinely need it. Person questions go "
+                        "to memory.lookup, never web search."
+                    ),
+                }
+            )
+            turn_tools = [TOOL_DEFS[name] for name in route.forced]
+            if route.remember_optional and "memory.remember" not in route.forced:
+                turn_tools.append(MEMORY_REMEMBER_TOOL)
+            # NOTE: tool_choice "required" / named-function is not used: Groq
+            # hard-errors (400) when this model answers directly instead of
+            # calling. Enforcement is narrowing the tools list + this nudge.
+            turn_choice = "auto"
+            if route.forced:
+                messages.append(
+                    {
+                        "role": "system",
+                        "content": (
+                            f"Router decision ({route.reason}): you MUST call "
+                            f"{', '.join(route.forced)} before answering this "
+                            "message. Do not answer from memory."
+                        ),
+                    }
+                )
 
         for turn in range(MAX_TOOL_TURNS):
             logger.info(f"Groq call turn {turn + 1}/{MAX_TOOL_TURNS}")
-            resp = groq_client.chat.completions.create(
-                messages=messages,
-                model=CHAT_MODEL,
-                tools=[
-                    WEB_SEARCH_TOOL,
-                    WEB_FETCH_TOOL,
-                    MEMORY_LOOKUP_TOOL,
-                    MEMORY_REMEMBER_TOOL,
-                ],
-                tool_choice="auto",
-                max_tokens=MAX_TOKENS,
-                temperature=TEMPERATURE,
+            # Single writer rule: memory.remember fires at most once per turn.
+            # The LLM is the sole writer; Tev only classifies, never saves.
+            active_tools = (
+                [t for t in turn_tools if t != MEMORY_REMEMBER_TOOL]
+                if remember_called
+                else turn_tools
             )
+            create_kwargs: Dict[str, Any] = {
+                "messages": messages,
+                "model": CHAT_MODEL,
+                "max_tokens": MAX_TOKENS,
+                "temperature": TEMPERATURE,
+            }
+            if active_tools:
+                create_kwargs["tools"] = active_tools
+                create_kwargs["tool_choice"] = turn_choice
+            resp = groq_client.chat.completions.create(**create_kwargs)
 
             choice = resp.choices[0]
 
             if choice.message.tool_calls:
+                messages.append(choice.message)
                 for tc in choice.message.tool_calls:
                     logger.info(
                         f"Tool call: {tc.function.name} args={tc.function.arguments}"
                     )
                     result = execute_tool(tc, current_user_key)
-                    messages.append(choice.message)
+                    called_tools.add(tc.function.name)
+                    if tc.function.name == "memory.remember":
+                        remember_called = True
                     messages.append(
                         {
                             "role": "tool",
@@ -462,6 +644,11 @@ def chat_with_history(
 
         if not response_text:
             raise ValueError("No response generated after max tool turns")
+
+        if not route.fallback and route.forced:
+            skipped = [t for t in route.forced if t not in called_tools]
+            if skipped:
+                logger.warning(f"Tev-forced tools skipped by LLM: {skipped}")
 
         cleaned_response = clean_response(extract_response_content(response_text))
 

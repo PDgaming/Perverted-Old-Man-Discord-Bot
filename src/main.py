@@ -5,7 +5,14 @@ from dotenv import load_dotenv
 from discord import Intents, Client, Message, NotFound, TextChannel, app_commands
 import discord
 from discord.ext import commands
-from responses import get_response
+from src.paths import (
+    BOT_LOG_PATH,
+    CONFIG_DIR,
+    CONFIG_FILE_PATH,
+    PROJECT_ROOT,
+    ensure_runtime_dirs,
+)
+from src.responses import get_response
 import sys
 import re
 import json
@@ -15,13 +22,16 @@ import shlex
 import psutil
 import prctl
 
+ensure_runtime_dirs()
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler("bot.log")],
+    handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler(BOT_LOG_PATH)],
 )
 logger = logging.getLogger(__name__)
-load_dotenv()
+load_dotenv(os.path.join(CONFIG_DIR, ".env"))
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
 
 
@@ -39,10 +49,6 @@ def _get_channel_id(name: str) -> int:
 
 PervertedOldMan_Channel: Final[int] = _get_channel_id("PERVERTED_OLD_MAN_CHANNEL_ID")
 MinecraftServer_Channel: Final[int] = _get_channel_id("MINECRAFT_SERVER_CHANNEL_ID")
-
-CONFIG_FILE_PATH: Final[str] = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "config.json"
-)
 
 
 def _load_minecraft_config() -> dict:
@@ -63,7 +69,35 @@ MC_TERMINAL_ARGS: Final[list] = _MINECRAFT_CONFIG["terminal_args"]
 
 intents: Intents = Intents.default()
 intents.message_content = True
+intents.members = True  # Required so message.author / interaction.member carry role data
 client: commands.Bot = commands.Bot(command_prefix="/", intents=intents)
+
+
+def _extract_role_names(source) -> list[str] | None:
+    """Return role names excluding @everyone, or None if roles are unavailable.
+
+    Returns None (unknown) when the object has no usable ``roles`` attribute
+    so callers can preserve previously stored roles instead of wiping them
+    with ``[]``. An empty list means the member genuinely has no extra roles.
+    """
+    roles = getattr(source, "roles", None)
+    if roles is None:
+        return None
+    try:
+        names: list[str] = []
+        for r in roles:
+            is_default = getattr(r, "is_default", False)
+            try:
+                default = is_default() if callable(is_default) else bool(is_default)
+            except Exception:
+                default = False
+            name = getattr(r, "name", None) or str(r)
+            if default or name == "@everyone":
+                continue
+            names.append(name)
+        return names
+    except TypeError:
+        return None
 
 if not TOKEN:
     logger.error("Discord token not found in environment variables")
@@ -412,8 +446,19 @@ async def grandpa(interaction: discord.Interaction, message: str):
         logger.info(f"[{channel}] {username}: {message}")
 
         # Get response with reply context (now possibly filled)
+        # Prefer interaction.member (guild Member with roles); fall back to user.
+        member_or_user = getattr(interaction, "member", None) or interaction.user
+        member_roles = _extract_role_names(member_or_user)
+        if member_roles is None:
+            member_roles = _extract_role_names(interaction.user)
         response: str = get_response(
-            message, username, replied_to_message_content, replied_to_message_author
+            message,
+            username,
+            replied_to_message_content,
+            replied_to_message_author,
+            user_id=interaction.user.id,
+            roles=member_roles,
+            display_name=getattr(interaction.user, "display_name", username),
         )
 
         # Send the user's message first
@@ -588,8 +633,8 @@ async def on_message(message: Message) -> None:
         replied_to_message_author,
         username,
         user_id=message.author.id,
-        roles=[role.name for role in message.author.roles[1:]],
-        display_name=message.author.display_name,
+        roles=_extract_role_names(message.author),
+        display_name=getattr(message.author, "display_name", username),
     )
 
 

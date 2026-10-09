@@ -3,9 +3,13 @@ import os
 import json
 import logging
 
+from src.paths import USER_MEMORY_PATH, ensure_runtime_dirs
+
 logger = logging.getLogger(__name__)
 
-USER_MEMORY_FILE: str = "user_memory.json"
+ensure_runtime_dirs()
+
+USER_MEMORY_FILE: str = USER_MEMORY_PATH
 MAX_NOTES_IN_CONTEXT: int = 3
 MAX_NOTES_CHARS: int = 400
 
@@ -57,7 +61,18 @@ def upsert_user_profile(
         if display_name:
             profile["display_name"] = display_name
         if roles is not None:
-            profile["roles"] = list(roles)
+            if roles:
+                profile["roles"] = list(roles)
+            else:
+                # Empty role list usually means the member cache wasn't
+                # populated (e.g. missing members intent), not that the user
+                # lost all roles. Preserve existing roles instead of wiping.
+                profile.setdefault("roles", [])
+                if profile.get("roles"):
+                    logger.info(
+                        f"Ignoring empty roles update for user {key}; "
+                        f"keeping existing roles={profile['roles']}"
+                    )
     save_user_memory()
     return key
 
@@ -79,13 +94,30 @@ def find_user(user_id: Optional[int] = None, username: Optional[str] = None) -> 
     return None
 
 
+def suggest_user(username: Optional[str]) -> Optional[str]:
+    """Closest known username/display name to a miss, or None."""
+    if not username:
+        return None
+    import difflib
+
+    candidates: Dict[str, str] = {}
+    for profile in user_memory.values():
+        for name in (profile.get("username"), profile.get("display_name")):
+            if name:
+                candidates[name.lower()] = name
+    if not candidates:
+        return None
+    match = difflib.get_close_matches(username.lower(), candidates.keys(), n=1, cutoff=0.6)
+    return candidates[match[0]] if match else None
+
+
 def add_note(key: str, note: str) -> None:
     """Appends a note to a user's profile."""
     profile = user_memory.get(key)
     if profile is None:
         return
     notes = profile.setdefault("notes", [])
-    if notes and notes[-1] == note:
+    if note in notes:
         return
     notes.append(note)
     save_user_memory()
