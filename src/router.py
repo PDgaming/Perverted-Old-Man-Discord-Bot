@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from typing import Any, Final, Mapping, Optional
+import json
 import logging
+import os
 import time
-
-import ollama
-from ollama import Client
+import urllib.request
+import urllib.error
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +25,39 @@ ROUTE_TO_TOOL: Final[dict] = {
     "needs_lookup": "memory.lookup",
 }
 
+# Cloudflare Workers AI model catalogue IDs for the Clef decision models.
+# Config `router.model` accepts either the short selector ("clef-flash",
+# "clef") or the full ID; anything else is passed through as a custom ID.
+CLEF_MODEL_IDS: Final[dict] = {
+    "clef-flash": "@cf/cloudflare/clef-flash",
+    "clef": "@cf/cloudflare/clef",
+}
+DEFAULT_MODEL: Final[str] = "clef-flash"
+
+
+def _env_first(*names: str) -> Optional[str]:
+    for name in names:
+        value = os.getenv(name)
+        if value and value.strip():
+            return value.strip()
+    return None
+
+
+def resolve_model_id(model: str) -> tuple[str, str]:
+    """Return (workers_ai_id, body_selector) for a configured model name."""
+    name = (model or DEFAULT_MODEL).strip()
+    if name in CLEF_MODEL_IDS:
+        return CLEF_MODEL_IDS[name], name
+    if name.startswith("@cf/"):
+        # Full ID given: body selector is the trailing segment after the
+        # last slash, e.g. "@cf/cloudflare/clef-flash" -> "clef-flash".
+        selector = name.rsplit("/", 1)[-1].strip() or DEFAULT_MODEL
+        return name, selector
+    return name, name
+
 
 def build_router_questions() -> dict:
-    """The 2 batched SystemOne questions. Single call, kept short for latency."""
+    """The 2 batched decision questions. Single call, kept short for latency."""
     return {
         ROUTER_QUESTION_ROUTE: {
             "type": "choice",
@@ -71,12 +102,17 @@ def build_router_questions() -> dict:
 @dataclass
 class RouterConfig:
     enabled: bool = True
-    model: str = "tev1:0.8b"
+    backend: str = "clef"
+    model: str = DEFAULT_MODEL
+    tev_model: str = "tev1:0.8b"
     timeout_s: float = 8.0
-    keep_alive: str = "5m"
     route_confidence_min: float = 0.35
     remember_fire: float = 0.7
     remember_skip: float = 0.4
+    account_id: Optional[str] = None
+    api_key: Optional[str] = None
+    # Ollama keep_alive for the tev backend; ignored by clef.
+    keep_alive: str = "5m"
 
     @classmethod
     def from_dict(cls, d: Mapping[str, Any]) -> "RouterConfig":
@@ -85,18 +121,39 @@ class RouterConfig:
             r = {}
         return cls(
             enabled=bool(r.get("enabled", True)),
-            model=str(r.get("model", "tev1:0.8b")),
+            backend=str(r.get("backend", "clef")),
+            model=str(r.get("model", DEFAULT_MODEL)),
+            tev_model=str(r.get("tev_model", "tev1:0.8b")),
             timeout_s=float(r.get("timeout_s", 8.0)),
-            keep_alive=str(r.get("keep_alive", "5m")),
             route_confidence_min=float(r.get("route_confidence_min", 0.35)),
             remember_fire=float(r.get("remember_fire", 0.7)),
             remember_skip=float(r.get("remember_skip", 0.4)),
+            account_id=r.get("account_id")
+            or _env_first(
+                "WORKERS_AI_ACCOUNT_ID", "CLOUDFLARE_ACCOUNT_ID", "ACCOUNT_ID"
+            ),
+            api_key=r.get("api_key")
+            or _env_first(
+                "WORKERS_AI_API_KEY", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_AUTH_TOKEN"
+            ),
+            keep_alive=str(r.get("keep_alive", "5m")),
         )
+
+    def credentials(self) -> tuple[Optional[str], Optional[str]]:
+        """Account ID + API token, re-reading env so import order vs dotenv
+        never leaves stale Nones behind."""
+        account = self.account_id or _env_first(
+            "WORKERS_AI_ACCOUNT_ID", "CLOUDFLARE_ACCOUNT_ID", "ACCOUNT_ID"
+        )
+        token = self.api_key or _env_first(
+            "WORKERS_AI_API_KEY", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_AUTH_TOKEN"
+        )
+        return account, token
 
 
 @dataclass
 class RouteDecision:
-    """Outcome of the Tev pre-pass.
+    """Outcome of the Clef pre-pass.
 
     forced: tool names the LLM MUST call (empty = answer directly, no tools).
     fallback: True means ignore forced and use all tools with auto (today's behavior).
@@ -118,7 +175,7 @@ def _field(answer: Any, name: str, default: Any = None) -> Any:
 
 
 def decide_route(answers: Optional[Mapping[str, Any]], cfg: RouterConfig) -> RouteDecision:
-    """Pure function: Tev answers + thresholds -> tool decision. No I/O."""
+    """Pure function: Clef answers + thresholds -> tool decision. No I/O."""
     if not answers:
         return RouteDecision(
             forced=[], fallback=True, remember_optional=True, reason="no answers"
@@ -175,11 +232,61 @@ def decide_route(answers: Optional[Mapping[str, Any]], cfg: RouterConfig) -> Rou
 
 
 class RouterError(Exception):
-    """Tev unavailable (daemon down, timeout, model missing). Caller falls back."""
+    """Clef unavailable (bad credentials, HTTP error, timeout). Caller falls back."""
+
+
+def _post_clef(
+    account_id: str, api_key: str, model_id: str, selector: str, state: str, timeout_s: float
+) -> dict:
+    """One Workers AI run call. Returns the unwrapped result dict."""
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model_id}"
+    payload = json.dumps(
+        {
+            "model": selector,
+            "state": state,
+            "questions": build_router_questions(),
+        }
+    ).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            body = json.load(resp)
+    except urllib.error.HTTPError as e:
+        try:
+            detail = e.read().decode("utf-8", "replace")[:500]
+        except Exception:
+            detail = ""
+        raise RouterError(f"Clef HTTP {e.code}: {detail}") from e
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        raise RouterError(f"Clef network error: {e}") from e
+
+    # Workers AI wraps results: {"result": {...}, "success": bool, ...}.
+    # Accept a bare result dict too, for forward compat.
+    if isinstance(body, Mapping) and "result" in body:
+        if not body.get("success", True):
+            errors = body.get("errors", body.get("messages", "unknown error"))
+            raise RouterError(f"Clef API error: {errors}")
+        result = body["result"]
+    else:
+        result = body
+    if not isinstance(result, Mapping) or "answers" not in result:
+        raise RouterError(f"Clef bad response shape: {str(body)[:300]}")
+    return result
 
 
 def route_message(state: str, cfg: RouterConfig) -> RouteDecision:
-    """Call Tev once (both questions batched) and decide. Raises RouterError on failure."""
+    """Call the configured backend once (both questions batched) and decide.
+
+    Raises RouterError on failure; the caller falls back to all-tools auto.
+    """
     if not cfg.enabled:
         return RouteDecision(
             forced=[], fallback=True, remember_optional=True, reason="router disabled"
@@ -188,11 +295,22 @@ def route_message(state: str, cfg: RouterConfig) -> RouteDecision:
         return RouteDecision(
             forced=[], fallback=True, remember_optional=True, reason="empty state"
         )
+    if (cfg.backend or "clef").strip().lower() == "tev":
+        return _route_via_tev(state, cfg)
+    return _route_via_clef(state, cfg)
+
+
+def _route_via_tev(state: str, cfg: RouterConfig) -> RouteDecision:
+    """Local Tev decision model via the Ollama daemon (SystemOne API)."""
+    try:
+        from ollama import Client
+    except ImportError as e:
+        raise RouterError(f"ollama package not installed: {e}") from e
     try:
         client = Client(timeout=cfg.timeout_s)
         start = time.monotonic()
         resp = client.systemone(
-            model=cfg.model,
+            model=cfg.tev_model,
             state=state,
             questions=build_router_questions(),
             keep_alive=cfg.keep_alive,
@@ -201,7 +319,31 @@ def route_message(state: str, cfg: RouterConfig) -> RouteDecision:
         decision = decide_route(resp.answers, cfg)
         logger.info(f"Tev route: {decision.reason} ({elapsed:.1f}s)")
         return decision
+    except RouterError:
+        raise
     except Exception as e:
         msg = str(e)
         logger.warning(f"Tev unavailable, falling back to LLM auto: {e}")
+        raise RouterError(msg) from e
+
+
+def _route_via_clef(state: str, cfg: RouterConfig) -> RouteDecision:
+    account_id, api_key = cfg.credentials()
+    if not account_id or not api_key:
+        logger.warning("Clef unavailable (missing account ID or API key), falling back to LLM auto")
+        raise RouterError("missing Cloudflare Workers AI credentials")
+    model_id, selector = resolve_model_id(cfg.model)
+    try:
+        start = time.monotonic()
+        result = _post_clef(account_id, api_key, model_id, selector, state, cfg.timeout_s)
+        elapsed = time.monotonic() - start
+        decision = decide_route(result.get("answers"), cfg)
+        logger.info(f"Clef route: {decision.reason} ({elapsed:.1f}s)")
+        return decision
+    except RouterError:
+        logger.warning("Clef unavailable, falling back to LLM auto", exc_info=True)
+        raise
+    except Exception as e:
+        msg = str(e)
+        logger.warning(f"Clef unavailable, falling back to LLM auto: {e}")
         raise RouterError(msg) from e

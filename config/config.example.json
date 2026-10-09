@@ -6,11 +6,13 @@
   "temperature": 0.7,
   "max_history": 10,
   "system_prompt_file": "prompts/system.md",
+  "offline_message": "William's brain is taking a nap (offline mode, no LLM calls). He'll be back shortly, dearie.",
   "router": {
     "enabled": true,
-    "model": "tev1:0.8b",
+    "backend": "clef",
+    "model": "clef-flash",
+    "tev_model": "tev1:0.8b",
     "timeout_s": 8.0,
-    "keep_alive": "5m",
     "route_confidence_min": 0.35,
     "remember_fire": 0.7,
     "remember_skip": 0.4

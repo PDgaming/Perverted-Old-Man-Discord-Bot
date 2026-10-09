@@ -31,7 +31,7 @@ Anything unexpected just returns false.
 ## Responses
 
 - Already running: "Minecraft server is already running!"
-- Fresh start: "Minecraft server started successfully!" plus a short status line.
+- Fresh start: "Starting Minecraft server..."
 - Failure: "Error starting Minecraft server..." with the error text if there is one. Failures go to `logs/bot.log` too.
 
 ## Files and deps

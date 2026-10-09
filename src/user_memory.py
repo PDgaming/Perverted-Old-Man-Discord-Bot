@@ -3,7 +3,7 @@ import os
 import json
 import logging
 
-from src.paths import USER_MEMORY_PATH, ensure_runtime_dirs
+from paths import USER_MEMORY_PATH, ensure_runtime_dirs
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,9 @@ def load_user_memory() -> Dict[str, Dict]:
             logger.info("User memory loaded successfully.")
             return data if isinstance(data, dict) else {}
         except (IOError, json.JSONDecodeError) as e:
-            logger.error(f"Failed to load user memory: {e}. Starting with an empty store.")
+            logger.error(
+                f"Failed to load user memory: {e}. Starting with an empty store."
+            )
     return {}
 
 
@@ -77,7 +79,9 @@ def upsert_user_profile(
     return key
 
 
-def find_user(user_id: Optional[int] = None, username: Optional[str] = None) -> Optional[str]:
+def find_user(
+    user_id: Optional[int] = None, username: Optional[str] = None
+) -> Optional[str]:
     """Returns the store key for a user matched by ID or case-insensitive username, or None."""
     if user_id is not None:
         key = str(user_id)
@@ -107,7 +111,9 @@ def suggest_user(username: Optional[str]) -> Optional[str]:
                 candidates[name.lower()] = name
     if not candidates:
         return None
-    match = difflib.get_close_matches(username.lower(), candidates.keys(), n=1, cutoff=0.6)
+    match = difflib.get_close_matches(
+        username.lower(), candidates.keys(), n=1, cutoff=0.6
+    )
     return candidates[match[0]] if match else None
 
 

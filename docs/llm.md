@@ -14,20 +14,33 @@ The system prompt defines the persona of the agent.
 
 ## Tools
 
-Every message first passes through the Tev router (`src/router.py`, model `tev1:0.8b` served
-by a local Ollama daemon). Tev answers two questions in one batched `systemone` call:
+Every message first passes through the Clef router (`src/router.py`, model
+`clef-flash` via Cloudflare Workers AI). Clef answers two questions in one
+batched call:
 `route` (choice: needs_search / needs_fetch / needs_lookup / none) and `should_remember`
 (noul: does the speaker state a personal fact). `decide_route` maps the answers to a
 forced tool set. The Groq call then gets only those tools plus an ephemeral system nudge
 ("you MUST call ..."), with `tool_choice="auto"`. `tool_choice="required"`, named-function
 choices, and `"none"` are deliberately not used: Groq hard-errors (400) whenever the model
-disagrees (calling on "none", answering directly on "required"). A Tev "plain chat" verdict
-is advisory only: all tools stay available and the model has final say. Anything Tev can't decide (daemon down, timeout, low confidence) falls
-back to all four tools with `auto`, which is the pre-Tev behavior. Router knobs live under
-the `router` key in `config/config.json` (`enabled`, `model`, `timeout_s` default 8, `keep_alive`,
-`route_confidence_min`, `remember_fire`, `remember_skip`). Needs `ollama` package plus
-`ollama pull tev1:0.8b` and a running daemon (`OLLAMA_HOST`, default localhost:11434).
-Expect roughly 2 to 6s added latency per message on CPU; slow calls fall back automatically.
+disagrees (calling on "none", answering directly on "required"). A Clef "plain chat" verdict
+is advisory only: all tools stay available and the model has final say. Anything Clef can't decide (HTTP error, timeout, low confidence, missing credentials) falls
+back to all four tools with `auto`, which is the pre-router behavior. Router knobs live under
+the `router` key in `config/config.json` (`enabled`, `model`, `timeout_s` default 8,
+`route_confidence_min`, `remember_fire`, `remember_skip`). Needs `WORKERS_AI_API_KEY` plus
+`WORKERS_AI_ACCOUNT_ID` (or `CLOUDFLARE_ACCOUNT_ID`, or bare `ACCOUNT_ID`) in `config/.env` (endpoint
+`https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/@cf/cloudflare/clef-flash`).
+Expect well under a second added latency per message; slow calls fall back automatically.
+
+Set `router.backend` to `"tev"` (or pass `--router tev` to `start.sh`) to use the old local
+Tev model (`tev_model`, default `tev1:0.8b`) via the Ollama daemon (`OLLAMA_HOST`, default
+localhost:11434, `keep_alive` still applies). Needs the `ollama` package plus
+`ollama pull tev1:0.8b`. Default backend is `"clef"`.
+
+`start.sh` passes flags through to `src/main.py`. `--no-llm` runs the bot with no Groq
+calls: every reply is `offline_message` from `config/config.json`. The Clef/Tev router
+still runs (decisions are logged), but web tools never execute since there is no LLM turn
+to call them. History is still saved locally. Useful for testing Discord plumbing
+without spending Groq calls. `--router clef|tev` overrides the config file backend.
 
 The model gets four tools on every call.
 
@@ -37,7 +50,7 @@ The model gets four tools on every call.
 
 `memory.lookup` recalls a stored user profile. Takes a Discord user ID or username and returns what William saved about that person. Usernames must be copied exactly, never spell-corrected. A named user with no match returns a miss (plus a did-you-mean retry hint), never another user's profile; the current speaker is the fallback only when no user was named at all.
 
-`memory.remember` saves a fact about a user. The prompt tells the model to call this whenever someone shares personal details. Notes are supposed to stay at 2 to 3 short sentences. Single-writer rule: only the LLM ever writes notes (Tev only classifies), at most one `memory.remember` call per turn, and `add_note` skips exact duplicates.
+`memory.remember` saves a fact about a user. The prompt tells the model to call this whenever someone shares personal details. Notes are supposed to stay at 2 to 3 short sentences. Single-writer rule: only the LLM ever writes notes (Clef only classifies), at most one `memory.remember` call per turn, and `add_note` skips exact duplicates.
 
 The tool loop in `chat_with_history` runs up to `MAX_TOOL_TURNS` (4). Tool calls are handled first even when the model also returns text on the same turn. Each turn it either runs tool calls, appends results as tool messages, and tries again, or gets text back and stops. If it gets neither text nor tool calls, it raises. If it never gets text after 4 turns, it raises. If `user_message` has a URL, the model should call `web.fetch`; otherwise `web.run`, including for technical questions the user explicitly asks about. The model summarizes what the tools return instead of refusing.
 

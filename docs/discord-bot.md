@@ -26,6 +26,8 @@ If a message is a reply, the bot fetches the original message and passes its tex
 
 ## Message sending
 
+`send_message` wraps the LLM turn in the stock `channel.typing()` indicator, then sends the answer as normal text via `send_chunked_message`.
+
 `send_chunked_message` splits William's reply on periods, question marks, and newlines, then sends each piece as its own Discord message. That is why he talks in bursts instead of paragraphs. Empty replies get an "I don't have a response for that" fallback.
 
 Starting a channel message with `?` sends the reply by DM instead of in channel. The `?` itself is stripped before the LLM sees it.

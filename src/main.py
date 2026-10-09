@@ -5,15 +5,18 @@ from dotenv import load_dotenv
 from discord import Intents, Client, Message, NotFound, TextChannel, app_commands
 import discord
 from discord.ext import commands
-from src.paths import (
+from paths import (
     BOT_LOG_PATH,
     CONFIG_DIR,
     CONFIG_FILE_PATH,
+    DATA_DIR,
     PROJECT_ROOT,
     ensure_runtime_dirs,
 )
-from src.responses import get_response
+from responses import get_response
+import responses
 import sys
+import argparse
 import re
 import json
 import subprocess
@@ -21,8 +24,35 @@ import asyncio
 import shlex
 import psutil
 import prctl
+import fcntl
 
 ensure_runtime_dirs()
+
+# Single-instance guard: only one bot process may hold this lock. The fd is
+# kept open for the life of the process; a second copy gets BlockingIOError
+# and exits cleanly (code 0 so systemd Restart=on-failure does not loop).
+_LOCK_FH = None
+
+
+def _acquire_singleton_lock() -> None:
+    global _LOCK_FH
+    lock_path = os.path.join(DATA_DIR, "bot.lock")
+    fh = open(lock_path, "w")
+    try:
+        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        fh.close()
+        logger = logging.getLogger(__name__)
+        logger.error(
+            "Another bot instance already holds %s; exiting.", lock_path
+        )
+        print(f"Another bot instance is already running (lock: {lock_path})")
+        sys.exit(0)
+    fh.truncate(0)
+    fh.write(str(os.getpid()))
+    fh.flush()
+    _LOCK_FH = fh  # held open until process exit
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,6 +60,8 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler(BOT_LOG_PATH)],
 )
 logger = logging.getLogger(__name__)
+
+_acquire_singleton_lock()
 load_dotenv(os.path.join(CONFIG_DIR, ".env"))
 load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
@@ -69,7 +101,9 @@ MC_TERMINAL_ARGS: Final[list] = _MINECRAFT_CONFIG["terminal_args"]
 
 intents: Intents = Intents.default()
 intents.message_content = True
-intents.members = True  # Required so message.author / interaction.member carry role data
+intents.members = (
+    True  # Required so message.author / interaction.member carry role data
+)
 client: commands.Bot = commands.Bot(command_prefix="/", intents=intents)
 
 
@@ -98,6 +132,7 @@ def _extract_role_names(source) -> list[str] | None:
         return names
     except TypeError:
         return None
+
 
 if not TOKEN:
     logger.error("Discord token not found in environment variables")
@@ -167,17 +202,19 @@ async def send_message(
     user_message = user_message[1:] if is_private else user_message
 
     try:
-        response: str = get_response(
-            user_message,
-            username,
-            replied_to_message_content,
-            replied_to_message_author,
-            user_id=user_id,
-            roles=roles,
-            display_name=display_name,
-        )
+        # Stock typing indicator while the (sync) LLM turn runs.
+        async with message.channel.typing():
+            response: str = get_response(
+                user_message,
+                username,
+                replied_to_message_content,
+                replied_to_message_author,
+                user_id=user_id,
+                roles=roles,
+                display_name=display_name,
+            )
 
-        # Use the new chunking function to send the response
+        # The answer itself is always normal text, chunked into bursts.
         if is_private:
             await send_chunked_message(message.author, response)
             logger.info(f"Sent private chunked response to {username}")
@@ -519,11 +556,9 @@ async def start(interaction: discord.Interaction):
                     f"Minecraft server start requested by {interaction.user}, but it was already running."
                 )
                 return
-            message = "🚀 **Minecraft server started successfully!**"
-            if "message" in result:
-                message += f"\n{result['message']}"
+            message = "🚀 **Starting Minecraft server...**"
             await interaction.followup.send(message)
-            logger.info(f"Minecraft server started by {interaction.user}.")
+            logger.info(f"Minecraft server start initiated by {interaction.user}.")
         else:
             error_msg = "❌ **Error starting Minecraft server...**"
             if isinstance(result, dict) and "error" in result:
@@ -643,7 +678,38 @@ async def on_error(event: str, *args, **kwargs) -> None:
     logger.error(f"Discord event error in {event}: {sys.exc_info()}")
 
 
+def parse_args(argv=None):
+    p = argparse.ArgumentParser(description="Perverted Old Man Discord Bot")
+    p.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="Run without LLM calls: replies use the offline message "
+        "(no Groq; the Clef/Tev router still runs, web tools never execute). "
+        "History is still saved locally.",
+    )
+    p.add_argument(
+        "--router",
+        choices=["clef", "tev"],
+        default=None,
+        help="Router backend for tool decisions (default: config.json "
+        "'router.backend', currently '%s'). 'tev' uses the local Ollama "
+        "daemon instead of Cloudflare clef-flash."
+        % responses.ROUTER_CFG.backend,
+    )
+    return p.parse_args(argv)
+
+
 def main() -> None:
+    args = parse_args()
+    if args.no_llm:
+        responses.NO_LLM = True
+        logger.info("Starting in --no-llm mode: no Groq calls (router still active).")
+    if args.router is not None:
+        responses.ROUTER_CFG.backend = args.router
+        logger.info(f"Router backend overridden to '{args.router}' via CLI flag.")
+    logger.info(
+        f"Startup: no_llm={responses.NO_LLM} router_backend={responses.ROUTER_CFG.backend}"
+    )
     try:
         client.run(token=TOKEN)
     except discord.errors.LoginFailure:
