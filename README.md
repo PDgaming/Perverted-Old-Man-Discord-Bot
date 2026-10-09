@@ -25,6 +25,24 @@ There are four parts. Each has its own doc if you want detail.
 
 Short term chat lives in `data/chat_history.json`. Long term facts about people live in `data/user_memory.json`. Both are local files, not synced anywhere.
 
+## Running the bot
+
+Start it from the repo root with:
+
+```
+./start.sh
+```
+
+That runs `uv run src/main.py`. Flags pass through, so `./start.sh --help` lists options. You can also call `uv run src/main.py` directly.
+
+Two flags exist:
+
+`--no-llm` - replies with the offline message instead of calling Groq (router still runs, history still saved).
+
+`--router clef|tev`- overrides the router backend from `config/config.json`.
+
+Copy `config/.env.example` to `config/.env` and `config/config.example.json` to `config/config.json` and fill in your keys first. Details are in the docs above.
+
 ## Quick pointer
 
 This README is only the overview. Setup, config, and internals are in the docs above. Start with the Discord bot doc if you are trying to run this yourself, since that is where the intents live.
