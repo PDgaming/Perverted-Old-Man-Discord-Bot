@@ -1,9 +1,19 @@
+# Secrets / local config (never commit)
 .env
-bot.log
+config/.env
+config/config.json
+
+# Runtime state (logs + local JSON stores)
+/logs
+!logs/.gitkeep
+/data
+!data/.gitkeep
 bot_output.log
-/__pycache__
-chat_history.json
-user_memory.json
+/plans
 invite.txt
+
+# Python
+/__pycache__
+src/__pycache__/
 .venv/
-config.json
+uv.lock

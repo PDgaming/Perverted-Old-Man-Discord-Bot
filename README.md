@@ -23,7 +23,7 @@ There are four parts. Each has its own doc if you want detail.
 - [User memory](docs/user-memory.md). A small JSON store that keeps what William knows about each person.
 - [Game server](docs/server.md). The `/start` command that launches the Minecraft server.
 
-Short term chat lives in `chat_history.json`. Long term facts about people live in `user_memory.json`. Both are local files, not synced anywhere.
+Short term chat lives in `data/chat_history.json`. Long term facts about people live in `data/user_memory.json`. Both are local files, not synced anywhere.
 
 ## Quick pointer
 

@@ -1,3 +1,4 @@
 dotenv
 discord
 groq
+ollama
