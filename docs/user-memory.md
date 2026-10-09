@@ -1,6 +1,6 @@
 # User memory
 
-This is William's long term memory for people. Code lives in `user_memory.py`, data in `user_memory.json`.
+This is William's long term memory for people. Code lives in `src/user_memory.py`, data in `data/user_memory.json`.
 
 ## Stored data
 
@@ -33,7 +33,7 @@ The file is gitignored. It only exists on the machine running the bot.
 
 ## How the LLM uses it
 
-On each chat call, the Discord layer passes user ID, username, roles, and display name. `responses.py` upserts the profile, renders it with `profile_to_context`, and injects it as a one-off system message. That message is not saved to chat history.
+On each chat call, the Discord layer passes user ID, username, roles, and display name. `src/responses.py` upserts the profile, renders it with `profile_to_context`, and injects it as a one-off system message. That message is not saved to chat history.
 
 The system prompt tells the model to call `memory.remember` whenever someone shares personal details, and `memory.lookup` when someone asks about another user. So the flow is plain: chat reveals a fact, the model saves it, later chats include it in context.
 

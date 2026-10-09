@@ -1,18 +1,20 @@
 # Discord bot
 
-This is the Discord layer. Code lives in `main.py`.
+This is the Discord layer. Code lives in `src/main.py`.
 
 ## Setup
 
 The bot runs with `commands.Bot(command_prefix="/")` and the `message_content` intent. That intent has to be enabled in the Discord Developer Portal too, or the bot sees nothing.
 
-It reads `DISCORD_TOKEN` from `.env` and exits if it is missing. Slash commands sync on `on_ready`, so `/grandpa` and `/start` show up after a restart.
+It reads `DISCORD_TOKEN` from `config/.env` and exits if it is missing. Slash commands sync on `on_ready`, so `/grandpa` and `/start` show up after a restart.
 
-Logs go to stdout and `bot.log`.
+Run it from the repo root with `python -m src.main`.
+
+Logs go to stdout and `logs/bot.log`.
 
 ## How William listens
 
-`on_message` only cares about one channel, `PervertedOldMan_Channel` in `main.py`. Everything else is ignored. Messages from the bot itself are ignored.
+`on_message` only cares about one channel, `PervertedOldMan_Channel` in `src/main.py`. Everything else is ignored. Messages from the bot itself are ignored.
 
 If a message is a reply, the bot fetches the original message and passes its text and author to the LLM. That is how William follows reply threads. Deleted originals just log a warning.
 
